@@ -113,7 +113,7 @@
         </div>
       </div>
 
-      <div id="navbar">
+      <div id="navbar" class="container py-4 flex justify-between gap-2 flex-wrap">
         <span> Hekto </span>
         <svg
           id="menu-icon"
@@ -133,6 +133,7 @@
         </svg>
 
         <svg
+          class="hidden"
           id="close-icon"
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -149,13 +150,13 @@
           <path d="m9 9 6 6" />
         </svg>
 
-        <ul id="nav-links">
+        <ul id="nav-links" class=" w-full flex flex-col items-center">
           <li>Home</li>
           <li>Pages</li>
           <li>Products</li>
         </ul>
-        <form>
-          <input />
+        <form class="flex gap-2 w-full justify-center">
+          <input class="border px-4 py-1 rounded" />
           <button>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -175,6 +176,11 @@
         </form>
       </div>
     </header>
+
+    <main class="container mt-10">
+       <h1>Hekto</h1>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur quod consequuntur fuga sequi? Ex vitae maiores blanditiis architecto libero ducimus, modi aperiam itaque vero voluptatum dolor facere eos. Doloribus, repudiandae?</p>
+    </main>
 
     <!-- banner -->
     <section></section>
