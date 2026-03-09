@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <style>
+      * {
+        font-family:
+          "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      .main-section {
+        width: 300px;
+        height: 400px;
+        background-color: rgb(225, 241, 255);
+        position: relative;
+        box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .bottom-section {
+        width: 100%;
+        height: 35%;
+        background-color: rgb(255, 255, 255);
+        position: absolute;
+        bottom: 0;
+        display: flex;
+        justify-content: space-evenly;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      #chair {
+        position: absolute;
+        top: 30px;
+        /* left: 15%; */
+        transition: transform 0.3s ease;
+      }
+
+      .color-choices {
+        width: 30%;
+        display: flex;
+        justify-content: space-around;
+      }
+
+      .colors {
+        width: 25%;
+        height: 5px;
+        border-radius: 20px;
+      }
+
+      .one {
+        background-color: #2f1ac4;
+      }
+      .two {
+        background-color: #fb2e86;
+      }
+      .three {
+        background-color: #08d15f;
+      }
+
+      #name {
+        font-size: 1.25rem;
+        color: #fb2e86;
+      }
+
+      #code,
+      #price {
+        color: #2f1ac4;
+      }
+
+      .icons {
+        color: #01c0d1;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        display: none;
+        justify-content: space-between;
+        align-items: center;
+        width: 70px;
+      }
+
+      .view-details {
+        width: 90px;
+        height: 30px;
+        background-color: #08d15f;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        position: absolute;
+        /* left: 33%; */
+        top: 220px;
+        display: none;
+      }
+
+      .fa:hover {
+        color: #fb2e86;
+        cursor: pointer;
+      }
+
+      .main-section:hover .view-details,
+      .main-section:hover .icons {
+        display: flex;
+      }
+
+      .view-details:hover {
+        cursor: pointer;
+      }
+
+      .main-section:hover .bottom-section {
+        background-color: #2f1ac4;
+      }
+
+      .main-section:hover #code,
+      .main-section:hover #price,
+      .main-section:hover #name {
+        color: white;
+      }
+
+      .main-section:hover .one {
+        background-color: aqua;
+      }
+      .main-section:hover #chair {
+        transform: scale(110%);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="main-section">
+        <img src="./chair.png" alt="" id="chair" />
+        <section class="bottom-section">
+          <span id="name">Cantilever <b>Chair</b></span>
+          <div class="color-choices">
+            <div class="colors one"></div>
+            <div class="colors two"></div>
+            <div class="colors three"></div>
+          </div>
+          <span id="code">Code: Y523201</span>
+          <span id="price">$42.00</span>
+        </section>
+        <div class="icons">
+          <i class="fa fa-shopping-cart"></i>
+          <i class="fa fa-heart"></i>
+          <i class="fa fa-search"></i>
+        </div>
+        <div class="view-details">View Details</div>
+      </section>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+    </main>
+  </body>
+</html>

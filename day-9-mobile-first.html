@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      .logo-wrapper {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        justify-content: space-between;
+      }
+
+      .menu-items {
+        /* display: none; */
+        height: 0px;
+        overflow: hidden;
+        padding-left: 1rem;
+        transition: height 0.5s;
+      }
+
+      .menu-items.active {
+        display: block;
+        height: 6rem;
+      }
+
+      header ul {
+        list-style: none;
+        gap: 1.5rem;
+      }
+
+      header .auth {
+        gap: 1.5rem;
+      }
+
+      @media (min-width: 768px) {
+        #menu-icon {
+          display: none;
+        }
+
+        nav {
+          display: flex;
+        }
+        .menu-items,
+        .menu-items.active {
+          padding:1rem;
+          height: auto;
+          display: flex;
+          flex-grow: 1;
+          justify-content: space-between;
+        }
+        header ul {
+          display: flex;
+        }
+        header .auth {
+          display: flex;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="logo-wrapper">
+          <span class="logo">logo</span>
+          <svg
+            id="menu-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-menu-icon lucide-menu"
+          >
+            <path d="M4 5h16" />
+            <path d="M4 12h16" />
+            <path d="M4 19h16" />
+          </svg>
+        </div>
+        <div id="menu-items" class="menu-items">
+          <ul>
+            <li><a>home </a></li>
+            <li><a>about </a></li>
+            <li><a>contact </a></li>
+          </ul>
+          <div class="auth">
+            <a>signin</a>
+            <a>signup</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+  </body>
+  <script>
+    document.getElementById("menu-icon").addEventListener("click", function () {
+      document.getElementById("menu-items").classList.toggle("active");
+    });
+  </script>
+</html>

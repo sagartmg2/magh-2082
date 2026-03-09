@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      /* css reset */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      ul,
+      ol {
+        list-style: none;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-weight: inherit;
+        font-size: inherit;
+      }
+
+      /* end css reset */
+
+      .container {
+        max-width: 100%;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+        margin-right: auto;
+        margin-left: auto;
+      }
+
+      .track {
+        border: 1px solid red;
+      }
+
+      .top-navbar-wrapper {
+        background-color: #7e33e0;
+      }
+
+      .top-navbar {
+        color: #f1f1f1;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 4px;
+      }
+
+      .navbar-item-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        gap: 0.5rem;
+      }
+
+      .navbar-item-wrapper.right {
+        align-items: end;
+      }
+
+      .top-navbar .email,
+      .top-navbar.login .top-navbar .phone {
+      }
+
+      .top-navbar .navbar-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .navbar {
+        padding: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      #close-icon {
+        display: none;
+      }
+
+      .navbar.active #close-icon {
+        display: inline-block;
+      }
+
+      .navbar.active #menu-icon {
+        display: none;
+      }
+
+      .nav-links {
+        max-height: 0px;
+        overflow: hidden;
+        text-align: center;
+        width: 100%;
+      }
+
+      .navbar.active .nav-links {
+        max-height: 100px;
+      }
+
+      .navbar form {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+
+      @media (min-width: 640px) {
+        .container {
+          max-width: 640px;
+        }
+      }
+
+      @media (min-width: 768px) {
+        .container {
+          max-width: 768px;
+        }
+
+        .top-navbar {
+          flex-direction: row;
+          justify-content: space-between;
+          padding-top: 10px;
+          padding-bottom: 10px;
+        }
+        .navbar-item-wrapper {
+          flex-direction: row;
+        }
+
+        .navbar {
+          justify-content: space-between;
+        }
+
+        .navbar #menu-icon,
+        .navbar #close-icon {
+          display: none;
+        }
+
+        .nav-links {
+          max-height: initial;
+          width: initial;
+          display: flex;
+          gap: 1rem;
+        }
+
+        .navbar form {
+          width: initial;
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .container {
+          max-width: 1024px;
+        }
+      }
+      @media (min-width: 1280px) {
+        .container {
+          max-width: 1280px;
+        }
+      }
+      @media (min-width: 1536px) {
+        .container {
+          max-width: 1536px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="top-navbar-wrapper">
+        <div class="top-navbar container">
+          <div class="navbar-item-wrapper">
+            <div class="email navbar-item">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-mail-icon lucide-mail"
+              >
+                <path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" />
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+              </svg>
+              <span> mhhasanul@gmail.com </span>
+            </div>
+            <div class="phone navbar-item">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-phone-call-icon lucide-phone-call"
+              >
+                <path d="M13 2a9 9 0 0 1 9 9" />
+                <path d="M13 6a5 5 0 0 1 5 5" />
+                <path
+                  d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"
+                />
+              </svg>
+              <span>+977 98345034534</span>
+            </div>
+          </div>
+
+          <div class="navbar-item-wrapper right">
+            <div class="login navbar-item">
+              <span>Login</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-user-icon lucide-user"
+              >
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <div class="navbar-item">
+              <svg
+                class="cart"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-shopping-cart-icon lucide-shopping-cart"
+              >
+                <circle cx="8" cy="21" r="1" />
+                <circle cx="19" cy="21" r="1" />
+                <path
+                  d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="navbar" class="navbar container">
+        <span class="logo-text"> Hekto </span>
+        <svg
+          id="menu-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-menu-icon lucide-menu"
+        >
+          <path d="M4 5h16" />
+          <path d="M4 12h16" />
+          <path d="M4 19h16" />
+        </svg>
+
+        <svg
+          id="close-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-circle-x-icon lucide-circle-x"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <path d="m15 9-6 6" />
+          <path d="m9 9 6 6" />
+        </svg>
+
+        <ul id="nav-links" class="nav-links">
+          <li>Home</li>
+          <li>Pages</li>
+          <li>Products</li>
+        </ul>
+        <form class="">
+          <input />
+          <button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-search-icon lucide-search"
+            >
+              <path d="m21 21-4.34-4.34" />
+              <circle cx="11" cy="11" r="8" />
+            </svg>
+          </button>
+        </form>
+      </div>
+    </header>
+    <!-- banner -->
+    <section></section>
+
+    <!-- latest products -->
+    <section></section>
+
+    <script>
+      document
+        .getElementById("menu-icon")
+        .addEventListener("click", function () {
+          document.getElementById("navbar").classList.toggle("active");
+        });
+
+      document
+        .getElementById("close-icon")
+        .addEventListener("click", function () {
+          document.getElementById("navbar").classList.toggle("active");
+        });
+    </script>
+  </body>
+</html>

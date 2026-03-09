@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      .parent {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(1, 1fr);
+      }
+
+      .child {
+        border: 1px solid;
+        height: 200px;
+      }
+
+      @media (min-width: 640px) {
+        .parent {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (min-width: 768px) {
+        .parent {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .parent {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="parent">
+      <div class="child"></div>
+      <div class="child"></div>
+      <div class="child"></div>
+      <div class="child"></div>
+      <div class="child"></div>
+      <div class="child"></div>
+      <div class="child"></div>
+      <div class="child"></div>
+      <div class="child"></div>
+      <div class="child"></div>
+      <div class="child"></div>
+      <div class="child"></div>
+    </div>
+  </body>
+</html>

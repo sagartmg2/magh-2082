@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      .parent {
+        /* height: 400px; */
+        width: 600px;
+        border: 1px solid;
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: 200px 200px 200px;
+        grid-template-columns: repeat(3, 200px);
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: repeat(5, 1fr);
+        /* grid-template-rows: repeat(3, 100px); */
+        /* align-content: center; */
+      }
+
+      .child {
+        border: 1px solid;
+      }
+
+      .child.two {
+        grid-column: span 4;
+      }
+
+      .products {
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        gap:1rem;
+      }
+      .product {
+        border: 1px solid;
+        height: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <br />
+    <br />
+    <div class="parent">
+      <div class="child">
+        <ul>
+          <li>filters</li>
+          <li>filters</li>
+          <li>filters</li>
+          <li>filters</li>
+          <li>filters</li>
+          <li>filters</li>
+          <li>filters</li>
+          <li>filters</li>
+          <li>filters</li>
+          <li>filters</li>
+          <li>filters</li>
+          <li>filters</li>
+          <li>filters</li>
+        </ul>
+      </div>
+      <div class="child two">
+        <div class="products">
+          <div class="product"></div>
+          <div class="product"></div>
+          <div class="product"></div>
+          <div class="product"></div>
+          <div class="product"></div>
+          <div class="product"></div>
+          <div class="product"></div>
+          <div class="product"></div>
+          <div class="product"></div>
+          <div class="product"></div>
+          <div class="product"></div>
+          <div class="product"></div>
+          <div class="product"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

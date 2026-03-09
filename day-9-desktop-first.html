@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      nav {
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      header ul {
+        list-style: none;
+        display: flex;
+        gap: 1.5rem;
+      }
+
+      header .auth {
+        display: flex;
+        gap: 1.5rem;
+      }
+
+
+      @media(max-width:639px){
+        nav{
+            background-color: orange;
+            flex-direction: column;
+        }
+
+        header ul{
+            flex-direction: column;
+        }
+      }
+
+
+
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <span class="logo">logo</span>
+        <ul>
+          <li><a>home </a></li>
+          <li><a>about </a></li>
+          <li><a>contact </a></li>
+        </ul>
+        <div class="auth">
+          <a>signin</a>
+          <a>signup</a>
+        </div>
+      </nav>
+    </header>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+header a {
+  color: black;
+  color: red;
+  color: inherit;
+  text-decoration: none;
+  text-transform: capitalize;
+}
+
+
+header a:hover {
+  color: red;
+  text-decoration: underline;
+}
+
+header ul {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+}
+
+
+.active{
+  color:red;
+  text-decoration: underline;
+}
