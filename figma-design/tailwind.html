@@ -20,6 +20,31 @@
         padding-left:.75rem;
         padding-right:.75rem;
       }
+
+      /* #nav-links {
+        display: none;
+      }
+
+      @media (min-width: 768px) {
+        #nav-links {
+          display: flex;
+        }
+
+        #menu-icon {
+          display: none;
+        }
+        
+      }
+
+      @media (min-width: 1024px) {
+        #nav-links {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-evenly;
+        }
+      } */
+
+
       
     </style>
   </head>
@@ -126,6 +151,7 @@
           stroke-width="2"
           stroke-linecap="round"
           stroke-linejoin="round"
+          class="md:hidden"
         >
           <path d="M4 5h16" />
           <path d="M4 12h16" />
@@ -150,7 +176,7 @@
           <path d="m9 9 6 6" />
         </svg>
 
-        <ul id="nav-links" class=" w-full flex flex-col items-center">
+        <ul id="nav-links" class="w-full flex flex-col items-center hidden md:flex lg:flex-row lg:justify-evenly">
           <li>Home</li>
           <li>Pages</li>
           <li>Products</li>
@@ -200,6 +226,7 @@
         .addEventListener("click", function () {
           document.getElementById("navbar").classList.toggle("active");
         });
+
     </script>
 </body>
 </html>
