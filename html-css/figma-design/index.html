@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
+
+      /* 
+        DRY : donot repeat yoursef
+      */
+
+      :root{
+        --primary-color:#151875;
+        --primary-color-50:#151875;
+        --primary-color-100:#151875;
+        --primary-color-200:#151875;
+        --primary-color-light:#151875;
+        --primary-color-dark:#151875;
+        --secondary-color:#FB2E86;
+      }
+
       /* css reset */
       * {
         margin: 0;
@@ -107,6 +122,10 @@
         width: 100%;
       }
 
+      .nav-links a:hover {
+        color: var(--secondary-color)
+      }
+
       .navbar.active .nav-links {
         max-height: 100px;
       }
@@ -115,6 +134,12 @@
         width: 100%;
         display: flex;
         justify-content: center;
+      }
+
+      .navbar form button {
+        border:0px;
+        background-color: var(--secondary-color);
+        color:white
       }
 
       @media (min-width: 640px) {
@@ -304,9 +329,9 @@
         </svg>
 
         <ul id="nav-links" class="nav-links">
-          <li>Home</li>
-          <li>Pages</li>
-          <li>Products</li>
+          <li><a>Home</a></li>
+          <li><a>Pages</a></li>
+          <li><a>Products</a></li>
         </ul>
         <form class="">
           <input />
