@@ -1,5 +1,6 @@
 //  re-use
 // variable: simply a keyword which can store some valid values
+var color = "red";
 address = "bagbazar";
 address = "putalisadak";
 let a = 20; // age // ERROR:  donot make random variable. variables should be meaning ful
