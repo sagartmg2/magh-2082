@@ -9,13 +9,14 @@
 
         3. true/false : BOOLEAN
 
-        4. empty values: NULL
+        4. empty values: NULL  
 
         5. undefined  // js specific
 
 
     non primitive data types Collection
     1. Object
+    2. Array
 
 */
 
@@ -78,10 +79,10 @@ let color2Rgb = "rgb(0,0,255)";
 
 /* 
     OBJECT  : similar to real life objects having properties/attributes
-    key:value,
-    key:value,
-    key:value,
-    key:value,
+    key : value,
+    key : value,
+    key : value,
+    key : value,
 */
 
 let projector = {
@@ -90,6 +91,8 @@ let projector = {
   brand: "sony",
   manufacturedAt: "2024-02-02",
   model: "G4-asd",
+  color: "black",
+  Color: "red",
 };
 
 let projector2 = {
@@ -122,6 +125,12 @@ let product2 = {
   discountedPrice: 800,
   description: "lorem impusm......",
   stock: 10,
+  dimensions: {
+    width: 9.26,
+    height: 22.47,
+    depth: 27.67,
+  },
+  dimensionsUnit: "inch",
 };
 
 console.log("before product2", product2);
