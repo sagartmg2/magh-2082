@@ -90,6 +90,18 @@ console.log("couse index 5: ", courses[5]);
 courses[2] = "data-scienece";
 console.log("after", { courses });
 
+courses = [
+  {
+    name: "mern",
+    duration: "3 months",
+    price: 10000,
+  },
+  "python",
+  "science",
+  "QA",
+  "marketing",
+];
+
 let user = "ram";
 let user1 = "hari";
 let user2 = "sita";
