@@ -13,18 +13,22 @@ let users = [];
 // users[3] = { name: "sita", age: 22, address: "bagbazar" };
 // users[4] = { name: "alex", age: 22, address: "bagbazar" };
 
-function addNewUser(name, age, address) {
-  users[users.length] = { name, age, address };
-}
+// function addNewUser(name, age, address) {
+//   users[users.length] = { name, age, address };
+// }
 
+const addNewUser = (name, age, address) => {
+  users[users.length] = { name, age, address };
+};
+
+addNewUser("hari", 22, "jamal");
+addNewUser("alex", 22, "jamal");
 addNewUser("ram", 21, "kapan");
 addNewUser("shyam", 22, "bagbazar");
-addNewUser("hari", 22, "jamal");
 addNewUser("sita", 22, "jamal");
-addNewUser("alex", 22, "jamal");
+addNewUser("raju", 22, "jamal");
 
 console.log(users);
-
 
 /* 
     EXPECTED-OUTPUT:

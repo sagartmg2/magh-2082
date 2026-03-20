@@ -13,6 +13,8 @@
     other all values are considered true in js.
     []
     {}
+    "   "
+    
 
 */
 
