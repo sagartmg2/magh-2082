@@ -27,6 +27,7 @@ console.log(isAdmin);
     variable declaration and initialization and re-initialziation
 */
 
+
 var color = "white";
 var color = "black";
 
