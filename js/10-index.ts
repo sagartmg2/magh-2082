@@ -74,3 +74,8 @@ let person: { name: string; age: number } = {
 };
 
 console.log(person);
+
+
+
+export {};
+// treat this file as local module
