@@ -59,7 +59,7 @@ let users: User[] = [
   },
 ];
 
-function printUserDetails(user: User) {
+function printUserDetails(user: User):void {
   console.log(
     `name is ${user.firstName} ${user.lastName} and age is ${user.age}.`,
   );
