@@ -25,7 +25,7 @@ let doubledNumbers = numbers.map((el) => {
   return el * 2;
 });
 
-doubledNumbers = numbers.map((el) => el * 2);
+doubledNumbers = numbers.map((el,index) => el * 2);
 
 console.log(doubledNumbers);
 
