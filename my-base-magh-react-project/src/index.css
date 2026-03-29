@@ -1,0 +1,12 @@
+/* body {
+  background-color: #333;
+  color: whitesmoke;
+} */
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.todo{
+    border:1px solid red;
+}
