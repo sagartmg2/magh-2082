@@ -25,3 +25,26 @@ th {
   border: 1px solid;
   padding: 0.5rem;
 }
+
+.track {
+  border: 1px solid red !important;
+}
+
+.featured-coursess {
+  grid-template-columns: repeat(1, 1fr);
+}
+
+/* landscaped */
+@media (min-width:640px) {
+  .featured-coursess {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
+/* tablet */
+@media (min-width:768px) {
+  .featured-coursess {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

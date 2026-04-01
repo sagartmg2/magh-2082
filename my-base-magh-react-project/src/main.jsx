@@ -135,6 +135,38 @@ const courses = [
   },
 ];
 
+// Component
+function CourseItem({ el }) {
+  return (
+    <li className="relative border border-gray-400 hover:shadow hover:shadow-amber-400">
+      {/* {el.featured ? (
+              <span className="absolute right-4 top-4 inline-block rounded-3xl px-4 py-2 border border-amber-800 ">
+                featured
+              </span>
+            ) : null} */}
+      {/* {el.featured && (
+              <span className="absolute right-4 top-4 inline-block rounded-3xl px-4 py-2 border border-amber-800 ">
+                featured
+              </span>
+            )} */}
+
+      <img
+        src="https://placehold.co/200x200"
+        className="w-full aspect-video object-cover"
+      />
+      <div className="p-4 flex flex-col items-center">
+        <p className="text-xl mt-4 font-medium">{el.title}</p>
+        <p className="text-xl mt-4 font-medium">${el.price}</p>
+        <p className="mt-4">{el.duration}</p>
+        <p className="mt-4">{el.level}</p>
+        <button className=" mt-4 px-6 py-2 border border-gray-300 bg-amber-700 text-white ">
+          Learn More
+        </button>
+      </div>
+    </li>
+  );
+}
+
 createRoot(document.getElementById("root")).render(
   <div className="p-8">
     <h1 style={{ textTransform: "uppercase" }} className="text-2xl font-bold">
@@ -157,14 +189,28 @@ createRoot(document.getElementById("root")).render(
       ))}
     </ul>
 
-    <h2 className="uppercase">Shopping List ( {shoppingItems.length} )</h2>
-    <ul>
+    <h2 className="uppercase text-3xl mt-10 ">
+      Shopping List ( {shoppingItems.length} )
+    </h2>
+    <ul className="pl-10 list-disc">
       <li> keyboard ( 10 )</li>
       <li> mounse ( 5 )</li>
       <li> desktop ( 5 )</li>
     </ul>
+    <br />
+    <br />
 
-    <table>
+    <ul className="pl-10 list-disc">
+      {shoppingItems.map((el) => (
+        <li key={el.item}>
+          {el.item} ( {el.quantity} )
+        </li>
+      ))}
+    </ul>
+    <br />
+    <br />
+
+    <table className="">
       <thead>
         <tr>
           <th>Item</th>
@@ -180,55 +226,139 @@ createRoot(document.getElementById("root")).render(
           <td>mouse</td>
           <td>5</td>
         </tr>
+        <tr>
+          <td>Keyboard</td>
+          <td>10</td>
+        </tr>
+        <tr>
+          <td>mouse</td>
+          <td>5</td>
+        </tr>
+        <tr>
+          <td>Keyboard</td>
+          <td>10</td>
+        </tr>
+        <tr>
+          <td>mouse</td>
+          <td>5</td>
+        </tr>
       </tbody>
     </table>
+    <br />
+    <br />
 
-    <ul>
-      {shoppingItems.map((el) => (
-        <li key={el.item}>
-          {el.item} ( {el.quantity} )
-        </li>
-      ))}
-    </ul>
-    <div className="todo">
-      convert the shooping list in tabular form while using map
-    </div>
+    <table className="">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Quantity</th>
+        </tr>
+      </thead>
+      <tbody>
+        {shoppingItems.map((item) => {
+          return (
+            <tr>
+              <td>{item.item}</td>
+              <td>{item.quantity}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+    <br />
+    <br />
+    <br />
 
-    <h2 className="uppercase">Featured Course List ( {courses.length} )</h2>
-    <ul className="">
-      <li>
-        <img src="https://placehold.co/200x200" />
-        <p>Mern Stack</p>
-        <p>3 months</p>
-        <p>Learn More</p>
-      </li>
-      <li>
-        <img src="https://placehold.co/200x200" />
-        <p>Mern Stack</p>
-        <p>3 months</p>
-        <p>Learn More</p>
-      </li>
-      <li>
-        <img src="https://placehold.co/200x200" />
-        <p>Mern Stack</p>
-        <p>3 months</p>
-        <p>Learn More</p>
-      </li>
+    <h2 className="uppercase text-2xl md:text-3xl lg:text-4xl mb-10">
+      Featured Course List ( {courses.filter((el) => el.featured).length} )
+    </h2>
+    {/* <ul className="track flex flex-wrap justify-center gap-4"> */}
+    <ul className="featured-courses grid gap-4 md:gap-8 grid-cols-1 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4">
+      {courses.map((el) => {
+        if (el.featured) {
+          return <CourseItem el={el} />;
+        }
+      })}
+
+      {courses.map((el) => {
+        if (el.featured) {
+          return (
+            <li className="border border-gray-400 hover:shadow hover:shadow-amber-400 hidden">
+              <img
+                src="https://placehold.co/200x200"
+                className="w-full aspect-video object-cover"
+              />
+              <div className="p-4 flex flex-col items-center">
+                <p className="text-xl mt-4 font-medium">{el.title}</p>
+                <p className="text-xl mt-4 font-medium">${el.price}</p>
+                <p className="mt-4">{el.duration}</p>
+                <p className="mt-4">{el.level}</p>
+                <button className=" mt-4 px-6 py-2 border border-gray-300 bg-amber-700 text-white ">
+                  Learn More
+                </button>
+              </div>
+            </li>
+          );
+        }
+      })}
     </ul>
-    <div className="todo">show only featured courses above</div>
+    <br />
+    <br />
+    <br />
     <hr />
-    <h2 className="uppercase">All Course List ( {courses.length} )</h2>
-    <ul>
-      <li>
-        <img src="https://placehold.co/200x200" />
-        <p>Mern Stack</p>
-        <p>3 months</p>
-        <p>Learn More</p>
-      </li>
+    <h2 className="uppercase text-3xl my-10" id="all-courses">
+      All Course List ( {courses.length} )
+    </h2>
+    <ul className="featured-courses grid gap-4 md:gap-8 grid-cols-1 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4">
+      {courses.map((el) => {
+        return <CourseItem el={el} />;
+      })}
+
+      {courses.map((el) => {
+        return (
+          <li className="relative border border-gray-400 hover:shadow hover:shadow-amber-400 hidden">
+            {/* {el.featured ? (
+              <span className="absolute right-4 top-4 inline-block rounded-3xl px-4 py-2 border border-amber-800 ">
+                featured
+              </span>
+            ) : null} */}
+            {el.featured && (
+              <span className="absolute right-4 top-4 inline-block rounded-3xl px-4 py-2 border border-amber-800 ">
+                featured
+              </span>
+            )}
+
+            <img
+              src="https://placehold.co/200x200"
+              className="w-full aspect-video object-cover"
+            />
+            <div className="p-4 flex flex-col items-center">
+              <p className="text-xl mt-4 font-medium">{el.title}</p>
+              <p className="text-xl mt-4 font-medium">${el.price}</p>
+              <p className="mt-4">{el.duration}</p>
+              <p className="mt-4">{el.level}</p>
+              <button className=" mt-4 px-6 py-2 border border-gray-300 bg-amber-700 text-white ">
+                Learn More
+              </button>
+            </div>
+          </li>
+        );
+      })}
     </ul>
-    <div className="todo">
-      in all courses, if featured, show a featured badge
-    </div>
+
+    {/* CourseItem() */}
+
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <ul className="grid grid-cols-5 gap-4 hidden">
+      <CourseItem el={courses[0]} />
+      <CourseItem el={courses[1]} />
+      <CourseItem el={courses[2]} />
+      <CourseItem el={courses[3]} />
+    </ul>
 
     <div className="todo">NOTE: DONOT repeate yourself : DRY principle</div>
   </div>,
