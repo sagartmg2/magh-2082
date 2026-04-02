@@ -8,8 +8,19 @@ const description =
 let shortDescription =
   "Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus,";
 
-const todos = ["html", "css", "js", "ts", "react", "node", "express"];
-const todosList = todos.map((el) => <li>{el}</li>);
+// const todos = ["html", "css", "js", "ts", "react", "node", "express"];
+
+const todos = [
+  { name: "html", status: false },
+  { name: "css", status: true },
+  { name: "js", status: false },
+  { name: "ts", status: true },
+  { name: "react", status: false },
+  { name: "node", status: true },
+  { name: "express", status: false },
+];
+
+import Button from "./Button";
 
 const shoppingItems = [
   {
@@ -135,33 +146,28 @@ const courses = [
   },
 ];
 
-// Component
-function CourseItem({ el }) {
+// function Button(props) {
+//   return (
+//     <button className="hover:bg-amber-500 capitalize mt-4 px-6 py-2 border border-gray-300 bg-amber-700 text-white ">
+//       {props.label}
+//     </button>
+//   );
+// }
+
+// Functional Component
+function CourseItem(props) {
+  console.log("props is ", props);
   return (
     <li className="relative border border-gray-400 hover:shadow hover:shadow-amber-400">
-      {/* {el.featured ? (
-              <span className="absolute right-4 top-4 inline-block rounded-3xl px-4 py-2 border border-amber-800 ">
-                featured
-              </span>
-            ) : null} */}
-      {/* {el.featured && (
-              <span className="absolute right-4 top-4 inline-block rounded-3xl px-4 py-2 border border-amber-800 ">
-                featured
-              </span>
-            )} */}
-
       <img
         src="https://placehold.co/200x200"
         className="w-full aspect-video object-cover"
       />
       <div className="p-4 flex flex-col items-center">
-        <p className="text-xl mt-4 font-medium">{el.title}</p>
-        <p className="text-xl mt-4 font-medium">${el.price}</p>
-        <p className="mt-4">{el.duration}</p>
-        <p className="mt-4">{el.level}</p>
-        <button className=" mt-4 px-6 py-2 border border-gray-300 bg-amber-700 text-white ">
-          Learn More
-        </button>
+        <p className="text-2xl  capitalize mt-4 font-medium">{props.title}</p>
+        <p className="text-xl mt-4 font-medium">US ${props.price}</p>
+        <p className="text-xl mt-4 font-medium">{props.duration}</p>
+        <Button label="learn more" />
       </div>
     </li>
   );
@@ -176,18 +182,104 @@ createRoot(document.getElementById("root")).render(
     <p>{shortDescription}</p>
     <br />
     <hr />
-    <h2 className="uppercase">Todos ( {todos.length} )</h2>
-    <ul className="pl-10 list-disc">
-      <li>html</li>
-      <li>css</li>
-      <li>js</li>
-    </ul>
-    {/* <ul>{todosList}</ul> */}
-    <ul>
+    <h2 className="uppercase text-2xl my-5">Todos ( {todos.length} )</h2>
+    <ul className="hidden">
       {todos.map((el) => (
-        <li key={el}>{el}</li>
+        <li key={el}>{el.name}</li>
       ))}
     </ul>
+
+    <table className="">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {todos.map((el) => {
+          return (
+            <tr className="bg-green-400] bg-red-400]">
+              <td>{el.name}</td>
+              <td>{el.status} completed / incompleted</td>
+              <td>
+                <Button label="edit" />
+                <Button label="delete" />
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+
+     <h2 className="uppercase text-2xl my-5">Incomplete Todos ( {todos.length} )</h2>
+    <ul className="hidden">
+      {todos.map((el) => (
+        <li key={el}>{el.name}</li>
+      ))}
+    </ul>
+
+    <table className="">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {todos.map((el) => {
+          return (
+            <tr className="bg-green-400] bg-red-400]">
+              <td>{el.name}</td>
+              <td>{el.status} completed / incompleted</td>
+              <td>
+                <Button label="edit" />
+                <Button label="delete" />
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+
+
+     <h2 className="uppercase text-2xl my-5">Completed Todos ( {todos.length} )</h2>
+    <ul className="hidden">
+      {todos.map((el) => (
+        <li key={el}>{el.name}</li>
+      ))}
+    </ul>
+
+    <table className="">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {todos.map((el) => {
+          return (
+            <tr className="bg-green-400] bg-red-400]">
+              <td>{el.name}</td>
+              <td>{el.status} completed / incompleted</td>
+              <td>
+                <Button label="edit" />
+                <Button label="delete" />
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+
+
+    
+    <div className="todo">1. print correct status </div>
+    <div className="todo">2. depending upon status, change row bg -color</div>
 
     <h2 className="uppercase text-3xl mt-10 ">
       Shopping List ( {shoppingItems.length} )
@@ -252,6 +344,7 @@ createRoot(document.getElementById("root")).render(
         <tr>
           <th>Item</th>
           <th>Quantity</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -260,6 +353,17 @@ createRoot(document.getElementById("root")).render(
             <tr>
               <td>{item.item}</td>
               <td>{item.quantity}</td>
+              <td>
+                <button className=" hover:bg-amber-500 mt-4 px-6 py-2 border border-gray-300 bg-amber-700 text-white ">
+                  static edit
+                </button>
+                <button className=" hover:bg-amber-500 mt-4 px-6 py-2 border border-gray-300 bg-amber-700 text-white ">
+                  static delete
+                </button>
+
+                <Button label="edit" />
+                <Button label="delete" />
+              </td>
             </tr>
           );
         })}
@@ -276,26 +380,30 @@ createRoot(document.getElementById("root")).render(
     <ul className="featured-courses grid gap-4 md:gap-8 grid-cols-1 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4">
       {courses.map((el) => {
         if (el.featured) {
-          return <CourseItem el={el} />;
+          return (
+            <CourseItem
+              title={el.title}
+              price={el.price}
+              duration={el.duration}
+            />
+          );
         }
       })}
 
       {courses.map((el) => {
         if (el.featured) {
           return (
-            <li className="border border-gray-400 hover:shadow hover:shadow-amber-400 hidden">
+            <li className="border border-gray-400 hover:shadow hover:shadow-amber-400 hidden ">
               <img
                 src="https://placehold.co/200x200"
                 className="w-full aspect-video object-cover"
               />
               <div className="p-4 flex flex-col items-center">
-                <p className="text-xl mt-4 font-medium">{el.title}</p>
+                <p className="text-3xl mt-4 font-medium">{el.title}</p>
                 <p className="text-xl mt-4 font-medium">${el.price}</p>
                 <p className="mt-4">{el.duration}</p>
                 <p className="mt-4">{el.level}</p>
-                <button className=" mt-4 px-6 py-2 border border-gray-300 bg-amber-700 text-white ">
-                  Learn More
-                </button>
+                <Button label="learn more" />
               </div>
             </li>
           );
@@ -311,7 +419,13 @@ createRoot(document.getElementById("root")).render(
     </h2>
     <ul className="featured-courses grid gap-4 md:gap-8 grid-cols-1 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4">
       {courses.map((el) => {
-        return <CourseItem el={el} />;
+        return (
+          <CourseItem
+            title={el.title}
+            price={el.price}
+            duration={el.duration}
+          />
+        );
       })}
 
       {courses.map((el) => {
@@ -333,7 +447,9 @@ createRoot(document.getElementById("root")).render(
               className="w-full aspect-video object-cover"
             />
             <div className="p-4 flex flex-col items-center">
-              <p className="text-xl mt-4 font-medium">{el.title}</p>
+              <p id="title" style={{}} className="text-3xl mt-4 font-medium">
+                {el.title}
+              </p>
               <p className="text-xl mt-4 font-medium">${el.price}</p>
               <p className="mt-4">{el.duration}</p>
               <p className="mt-4">{el.level}</p>
@@ -346,20 +462,19 @@ createRoot(document.getElementById("root")).render(
       })}
     </ul>
 
-    {/* CourseItem() */}
+    {/* CourseItem( "mern", 100 ) */}
+    {/* CourseItem( "QA", 50 ) */}
 
     <br />
     <br />
     <br />
-    <br />
-    <br />
-    <ul className="grid grid-cols-5 gap-4 hidden">
-      <CourseItem el={courses[0]} />
-      <CourseItem el={courses[1]} />
-      <CourseItem el={courses[2]} />
-      <CourseItem el={courses[3]} />
+
+    <ul className="grid grid-cols-5 gap-4">
+      <CourseItem title="mern" price="100" duration="3 months" />
+      <CourseItem title="QA" price="50" duration="2 months" />
+      <CourseItem title="pyhton" price="50" duration="2 months" />
+      <CourseItem title="data-science" price="50" duration="2 months" />
+      <CourseItem title="laravel" price="50" duration="2 months" />
     </ul>
-
-    <div className="todo">NOTE: DONOT repeate yourself : DRY principle</div>
   </div>,
 );
