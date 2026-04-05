@@ -7,7 +7,8 @@ function App() {
     <div>
       <Counter />
       <Theme />
-      <Home />
+      {/* <Home /> */}
+      {/* fetch api data */}
     </div>
   );
 }

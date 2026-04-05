@@ -360,12 +360,10 @@ export default function Home() {
       <br />
       <br />
 
-      <ul className="grid grid-cols-5 gap-4">
+      <ul className="grid grid-cols-2 md:gid-cols-3 lg:grid-cols-4 gap-4">
         <CourseItem title="mern" price="100" duration="3 months" />
         <CourseItem title="QA" price="50" duration="2 months" />
         <CourseItem title="pyhton" price="50" duration="2 months" />
-        <CourseItem title="data-science" price="50" duration="2 months" />
-        <CourseItem title="laravel" price="50" duration="2 months" />
       </ul>
     </div>
   );
