@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export default function Theme() {
-  const [darkTheme, setDarkTheme] = useState(true);
+  const [darkTheme, setDarkTheme] = useState(false);
 
   const changeToDarkMode = () => {
     console.log("dark mode ");
@@ -13,17 +13,11 @@ export default function Theme() {
     setDarkTheme(false);
   };
 
-  const changeTheme = (darkThemeStatus) => {
-    // setDarkTheme([])
-    // setDarkTheme([[]])
-    // setDarkTheme([{}])
-    // setDarkTheme({})
+  const changeTheme = (darkThemeStatus) =>{
+    setDarkTheme()
+  }
 
-    setDarkTheme(darkThemeStatus);
-  };
 
-  console.log("render| re-render");
-  console.log({ darkTheme });
 
   return (
     <div className={` ${darkTheme && "bg-black text-white"} p-8`}>
@@ -42,26 +36,20 @@ export default function Theme() {
 
       {darkTheme ? (
         <button
-          onClick={() => {
-            // changeTheme(false);
-            setDarkTheme(false)
-          }}
+          onClick={changeToLightMode}
           className="border bg-white px-3 py-2 text-black rounded-xl"
         >
           light theme
         </button>
       ) : (
         <button
-          onClick={() => {
-            // changeTheme(true);
-            setDarkTheme(true)
-          }}
+          onClick={changeToDarkMode}
           className="border bg-white px-3 py-2 text-black rounded-xl mr-3"
         >
           dark theme
         </button>
       )}
-
+   
       <p className="mt-8">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla,
         inventore in voluptate nihis!

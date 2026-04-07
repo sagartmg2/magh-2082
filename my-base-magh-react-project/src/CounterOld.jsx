@@ -15,44 +15,33 @@
 */
 
 import { useState } from "react";
-import Button from "./Button";
 
-function Counter() {
+function CounterOld() {
   // let countValue = 111;
-  let [countValue, setCountValue] = useState(100); // array destrucutre
+  let [countValue, setCountValue] = useState(111);  // return [111, () =>{}]
 
   function increment() {
     console.log("increment");
     // countValue++
-    // countValue = countValue + 1;
-    // countValue += 1;  // ERROR: state variable cannot be changed directly
-    // let newValue = countValue + 1;
-    // setCountValue(newValue);
-
-    // setCountValue(countValue + 1);
-    // console.log({countValue});
-    // setCountValue(countValue + 1);
-    // setCountValue(countValue + 1);
-    // setCountValue(101)
-    // setCountValue(1000)
-
-    setCountValue((prev) => prev + 1);
-    setCountValue((prev) => prev + 1);
-    setCountValue((prev) => prev + 1);
+    // countValue = countValue + 1; // ERROR:  cannot change statem variable directly
+    // countValue += 1; 
+    let newValue = countValue + 1
+    setCountValue(newValue)
+    console.log({ countValue });
   }
 
   function decrement() {
     console.log("decrement");
-    // countValue -= 1;  // ERROR: state variable cannot be changed directly
-    let newValue = countValue - 1;
-    setCountValue(newValue);
+    // countValue -= 1;
+    setCountValue(countValue - 1)
     console.log({ countValue });
   }
 
-  console.log("render | re-render");
+  console.log("render | re-render  ");
+
   return (
     <div className="p-8">
-      <h1 className="text-4xl mb-4">{countValue}</h1>
+      <h1 className="text-4xl">{countValue}</h1>
 
       <button
         onClick={increment}
@@ -72,4 +61,4 @@ function Counter() {
   );
 }
 
-export default Counter;
+export default CounterOld;

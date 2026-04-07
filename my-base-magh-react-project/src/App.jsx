@@ -1,12 +1,16 @@
+import CounterOld from "./CounterOld";
 import Counter from "./Counter";
 import Home from "./Home";
 import Theme from "./Theme";
+import GoogleTabs from "./GoogleTabs";
 
 function App() {
   return (
-    <div>
-      <Counter />
-      <Theme />
+    <div className="p-8">
+      <GoogleTabs/>
+      {/* <CounterOld/> */}
+      {/* <Counter /> */}
+      {/* <Theme /> */}
       {/* <Home /> */}
       {/* fetch api data */}
     </div>
