@@ -29,16 +29,19 @@ function Counter() {
     // let newValue = countValue + 1;
     // setCountValue(newValue);
 
-    // setCountValue(countValue + 1);
+    setCountValue(countValue + 1);
+
+    console.log(countValue);
+
     // console.log({countValue});
     // setCountValue(countValue + 1);
     // setCountValue(countValue + 1);
     // setCountValue(101)
     // setCountValue(1000)
 
-    setCountValue((prev) => prev + 1);
-    setCountValue((prev) => prev + 1);
-    setCountValue((prev) => prev + 1);
+    // setCountValue((prev) => prev + 1);
+    // setCountValue((prev) => prev + 1);
+    // setCountValue((prev) => prev + 1);
   }
 
   function decrement() {

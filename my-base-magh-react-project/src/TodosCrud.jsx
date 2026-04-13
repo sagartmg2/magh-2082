@@ -5,20 +5,20 @@ import { Pencil, Trash } from "lucide-react";
 import TodosCount from "./TodosCount";
 
 export default function TodosCrud() {
-  const [todos, setTodos] = useState([
-    {
-      title: "react",
-      status: false,
-    },
-    {
-      title: "css",
-      status: true,
-    },
-  ]);
+  // const [todos, setTodos] = useState([
+  //   {
+  //     title: "react",
+  //     status: false,
+  //   },
+  //   {
+  //     title: "css",
+  //     status: true,
+  //   },
+  // ]);
 
-  const [ediableTodoIndex, setEediableTodoIndex] = useState(null);
+  const [todos, setTodos] = useState(JSON.parse(localStorage.getItem("todos")) || [] );
 
-  // const[] = useState()
+  const [ediableTodoIndex, setEediableTodoIndex] = useState(null); // 0
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -33,7 +33,14 @@ export default function TodosCrud() {
     // tempTodos.push(title);
     // setTodos(tempTodos);
 
-    setTodos([...todos, { title: title, status: false }]);
+    setTodos([...todos, { title: title, status: false }]); // not synchronous
+
+    // console.log(todos); // we wont get the updated todos here
+    updateLocalStorage([...todos, { title: title, status: false }]);
+  };
+
+  const updateLocalStorage = (todos) => {
+    localStorage.setItem("todos", JSON.stringify(todos));
   };
 
   const deteleTodo = (index) => {
@@ -45,13 +52,38 @@ export default function TodosCrud() {
 
     let tempTodos = [...todos];
     tempTodos.splice(index, 1);
+    //  instead of splice, we can use filter as well
     setTodos(tempTodos);
+
+    // updateLocalStorage(todos)  // wrong
+    updateLocalStorage(tempTodos);
   };
 
   const editTodo = (index) => {
     console.log("edit todos", index);
     setEediableTodoIndex(index);
   };
+
+  const updateTodo = (e) => {
+    e.preventDefault();
+
+    let temp = [...todos];
+    temp[ediableTodoIndex].title = e.target.title.value;
+    temp[ediableTodoIndex].status = e.target.status.checked;
+
+    // we can use map function as well
+
+    setTodos(temp);
+    updateLocalStorage(temp);
+    closeModal();
+  };
+
+  function closeModal() {
+    setEediableTodoIndex(null);
+  }
+
+  let storedTodos = JSON.parse(localStorage.getItem("todos"))
+  // setTodos(storedTodos)
 
   console.log("render | re-render");
   return (
@@ -148,12 +180,7 @@ export default function TodosCrud() {
           className={`backdrop bg-black] opacity-50] bg-[rgba(0,0,0,0.5)]  h-screen fixed top-0 right-0 bottom-0 left-0`}
         >
           <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              console.log(e.target.title.value);
-              console.log(e.target.status.checked);
-              // TODO:  update state  accordingly
-            }}
+            onSubmit={updateTodo}
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -164,7 +191,7 @@ export default function TodosCrud() {
             <input
               // value="react"
               // onChange={(e) =>{e.target.value}}
-              defaultValue={" react / css : updated according"}
+              defaultValue={todos[ediableTodoIndex].title}
               name="title"
               id="title"
               placeholder="title"
@@ -175,7 +202,7 @@ export default function TodosCrud() {
             <input
               // checked={true}
               // onChange
-              defaultChecked={true}
+              defaultChecked={todos[ediableTodoIndex].status}
               id="status"
               name="status"
               type="checkbox"

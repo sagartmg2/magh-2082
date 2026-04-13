@@ -30,17 +30,15 @@ let dataFetched = false;
 export default function TodosApi() {
   console.log("render | re-render");
 
-  // const [todos, setTodos] = useState([]);
   const [todos, setTodos] = useState([
-    { title: "html" },
-    { title: "css", author: { name: "john" } },
+    { id: 1, title: "html" },
+    { id: 2, title: "css", author: { name: "john" } },
   ]);
-  // const [todos, setTodos] = useState(undefined);
 
   console.log({ dataFetched });
 
   if (!dataFetched) {
-    // fetchApiData()
+    fetchApiData()
   }
 
   function fetchApiData() {
@@ -63,7 +61,7 @@ export default function TodosApi() {
       <ul className="list-disc pl-10">
         {todos.map((el) => {
           return (
-            <li>
+            <li key={el.id}>
               {" "}
               {el.title} ( {el.completed ? "completed" : "pending"} ) -{" "}
               {el.author?.name}
