@@ -1,4 +1,4 @@
-import Button, { SmallButton, RoundedButton } from "./Button";
+import Button, { SmallButton, RoundedButton } from "./components/ui/Button";
 import todos from "./data/todos";
 import { shoppingItems, courses } from "./data/info";
 import { CourseItem } from "./CourseItem";

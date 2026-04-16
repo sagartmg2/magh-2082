@@ -5,14 +5,14 @@ import Theme from "./Theme";
 import GoogleTabs from "./GoogleTabs";
 import TodosApi from "./TodosApi";
 import TodosCrud from "./TodosCrud";
+import ProductsApi from "./ProductsApi";
 
 function App() {
   return (
     <div className="p-8">
-      <TodosCrud />
-      <TodosApi />
-
-      
+      {/* <TodosCrud /> */}
+      {/* <TodosApi /> */}
+      <ProductsApi/>
       {/* <GoogleTabs/> */}
       {/* <CounterOld/> */}
       {/* <Counter /> */}

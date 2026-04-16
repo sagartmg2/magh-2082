@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import Button from "./Button";
+import Button from "./components/ui/Button";
 import { Pencil, Trash } from "lucide-react";
 import TodosCount from "./TodosCount";
 
@@ -16,7 +16,9 @@ export default function TodosCrud() {
   //   },
   // ]);
 
-  const [todos, setTodos] = useState(JSON.parse(localStorage.getItem("todos")) || [] );
+  const [todos, setTodos] = useState(
+    JSON.parse(localStorage.getItem("todos")) || [],
+  );
 
   const [ediableTodoIndex, setEediableTodoIndex] = useState(null); // 0
 
@@ -82,7 +84,7 @@ export default function TodosCrud() {
     setEediableTodoIndex(null);
   }
 
-  let storedTodos = JSON.parse(localStorage.getItem("todos"))
+  let storedTodos = JSON.parse(localStorage.getItem("todos"));
   // setTodos(storedTodos)
 
   console.log("render | re-render");
@@ -172,6 +174,7 @@ export default function TodosCrud() {
     bottom: 0;
     top: 0;
     */}
+
       {ediableTodoIndex != null && (
         <div
           onClick={() => {
@@ -183,6 +186,7 @@ export default function TodosCrud() {
             onSubmit={updateTodo}
             onClick={(e) => {
               e.stopPropagation();
+              // e.preventDefault();
             }}
             className="bg-white w-1/2 mt-16 mx-auto p-4"
           >
