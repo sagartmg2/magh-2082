@@ -48,3 +48,14 @@ th {
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
+
+
+.rc-pagination {
+  display: flex;
+  gap:1rem;
+}
+
+.rc-pagination-item-active{
+  color: red;
+}
