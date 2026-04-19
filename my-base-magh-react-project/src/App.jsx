@@ -6,13 +6,15 @@ import GoogleTabs from "./GoogleTabs";
 import TodosApi from "./TodosApi";
 import TodosCrud from "./TodosCrud";
 import ProductsApi from "./ProductsApi";
+import TodosCrudApi from "./TodosCrudApi";
 
 function App() {
   return (
     <div className="p-8">
-      {/* <TodosCrud /> */}
+      <TodosCrud />
+      <TodosCrudApi/>
       {/* <TodosApi /> */}
-      <ProductsApi/>
+      {/* <ProductsApi/> */}
       {/* <GoogleTabs/> */}
       {/* <CounterOld/> */}
       {/* <Counter /> */}

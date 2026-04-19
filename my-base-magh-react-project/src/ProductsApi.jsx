@@ -47,14 +47,12 @@ export default function ProductsApi() {
       )
       .then((res) => {
         setProducts(res.data.products);
-
         console.log(res.data.total);
         setPagination({ ...pagination, total: res.data.total });
       });
   }
 
   const searchProduct = (e) => {
-    
     setSearchText(e.target.value);
 
     // fetchApiData(e.target.value)
