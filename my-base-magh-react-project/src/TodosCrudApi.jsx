@@ -10,6 +10,12 @@ export default function TodosCrudApi() {
     title:"mongodb"
   })
 
+  axios.put("http://localhost:3000/api/todos/1",{
+    title:"mongodb"
+  })
+  
+  axios.delete("http://localhost:3000/api/todos/1")
+
 
   return (
     <div>

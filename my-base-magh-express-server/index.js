@@ -4,7 +4,7 @@ const cors = require("cors");
 const app = express();
 const port = 3000;
 app.use(cors()); // middleware
-app.use(express.json()); // 
+app.use(express.json()); //
 
 app.get("/", (req, res) => {
   res.send("Hello World!!");
@@ -12,26 +12,59 @@ app.get("/", (req, res) => {
 
 // assume it as database
 let todos = [
-  { id: 1, title: "react" },
-  { id: 2, title: "css" },
-  { id: 3, title: "html" },
-//   { id: 4, title: "mongdob" },
+  { id: 1, title: "react", status: false },
+  { id: 2, title: "css", status: true },
+  // { id: 3, title: "mongdob" },
 ];
+
 
 app.get("/api/todos", (req, res) => {
   res.send(todos);
 });
 
+
 app.post("/api/todos", (req, res) => {
   console.log(req.body);
-  res.send("todos created");
+
+  if (!req.body.title) {
+    return res.status(400).send({
+      msg: "Bad request",
+      errors: [
+        {
+          field: "title",
+          msg: "title is required",
+        },
+      ],
+    });
+  }
+
+  todos.push({
+    id: todos.length + 1,
+    title: req.body.title,
+    status: false,
+  });
+  res.send({ msg: "todos created" });
 });
 
-app.put("/api/todos/:slug", (req, res) => {
+app.put("/api/todos/:id", (req, res) => {
+  console.log(todos[req.params.id]);
+  console.log(req.params.id);
+
+  todos = todos.map((el) => {
+    if (el.id == req.params.id) {
+      return { ...el, status: req.body.status, title: req.body.title };
+    }
+    return el;
+  });
+
   res.send("todos updated");
 });
 
-app.delete("/api/todos/:slug", (req, res) => {
+app.delete("/api/todos/:id", (req, res) => {
+  todos = todos.filter((todo) => {
+    return todo.id != req.params.id;
+  });
+
   res.send("todos delete");
 });
 
