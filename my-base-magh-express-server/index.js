@@ -4,6 +4,7 @@ const cors = require("cors");
 const app = express();
 const port = 3000;
 app.use(cors()); // middleware
+
 app.use(express.json()); //
 
 app.get("/", (req, res) => {
@@ -14,14 +15,20 @@ app.get("/", (req, res) => {
 let todos = [
   { id: 1, title: "react", status: false },
   { id: 2, title: "css", status: true },
-  // { id: 3, title: "mongdob" },
+  { id: 3, title: "mongdob", status: true },
+  { id: 4, title: "postress", status: true },
+  { id: 5, title: "node-js", status: true },
+  { id: 6, title: "express-js", status: true },
+  { id: 7, title: "tailwind-js", status: true },
+  { id: 8, title: "rabbitmq", status: true },
+  { id: 9, title: "redis", status: true },
 ];
 
+let highestId = 5;
 
 app.get("/api/todos", (req, res) => {
   res.send(todos);
 });
-
 
 app.post("/api/todos", (req, res) => {
   console.log(req.body);
@@ -38,8 +45,11 @@ app.post("/api/todos", (req, res) => {
     });
   }
 
+  highestId++;
+
   todos.push({
-    id: todos.length + 1,
+    // id: todos.length + 1,
+    id: highestId,
     title: req.body.title,
     status: false,
   });
