@@ -1,6 +1,8 @@
 function Button({ label, children, size, rounded, className, ...rest }) {
   let sizeClss = "px-6 py-2";
-  if (size == "sm") {
+  if (size == "xs") {
+    sizeClss = "px-1 py-1";
+  } else if (size == "sm") {
     sizeClss = "px-2 py-1";
   } else if (size == "lg") {
     sizeClss = "px-8 py-4";
@@ -8,7 +10,7 @@ function Button({ label, children, size, rounded, className, ...rest }) {
 
   let classes = `hover:bg-amber-500 disabled:bg-amber-200 disabled:cursor-no-drop  capitalize   border border-gray-300 bg-amber-700 text-white ${rounded ? "rounded-4xl" : ""} ${sizeClss} `;
 
-  classes +=className;
+  classes += className;
 
   return (
     <button

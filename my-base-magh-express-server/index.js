@@ -24,7 +24,7 @@ let todos = [
   { id: 9, title: "redis", status: true },
 ];
 
-let highestId = 5;
+let highestId = 9;
 
 app.get("/api/todos", (req, res) => {
   res.send(todos);
@@ -40,6 +40,18 @@ app.post("/api/todos", (req, res) => {
         {
           field: "title",
           msg: "title is required",
+        },
+      ],
+    });
+  }
+
+  if (parseInt(req.body.title)) {
+    return res.status(400).send({
+      msg: "Bad request",
+      errors: [
+        {
+          field: "title",
+          msg: "title must be a text ",
         },
       ],
     });
@@ -71,6 +83,7 @@ app.put("/api/todos/:id", (req, res) => {
 });
 
 app.delete("/api/todos/:id", (req, res) => {
+  // let a = b + c;
   todos = todos.filter((todo) => {
     return todo.id != req.params.id;
   });
