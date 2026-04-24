@@ -26,3 +26,9 @@ status codes
     503 gateway error
 
 
+
+
+# docker
+
+1. docker compose up 
+2. docker ps 
