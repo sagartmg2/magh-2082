@@ -30,5 +30,14 @@ status codes
 
 # docker
 
-1. docker compose up 
-2. docker ps 
+## terms 
+- image  | simiilar to github repo | npm packages
+- container   | 
+
+
+
+## commands
+1. docker ps  | see the list of running containers 
+2. docker compose up 
+3. docker compose down
+4. docker stop <container_name>

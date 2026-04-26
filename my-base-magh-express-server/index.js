@@ -1,5 +1,35 @@
-const express = require("express");
 const cors = require("cors");
+const express = require("express");
+const { Sequelize, DataTypes } = require("sequelize");
+// const sequelize = new Sequelize('postgres://user:pass@example.com:5432/dbname')
+const sequelize = new Sequelize(
+  "postgres://postgres:postgres@localhost:5439/postgres",
+  {
+    logging: true,
+  },
+);
+
+const checkDbConnection = async () => {
+  try {
+    await sequelize.authenticate();
+    await sequelize.sync({ alter: true });
+    // await sequelize.sync({ alter: true, force: true });
+    console.log("Connection has been established successfully.");
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
+  }
+};
+
+checkDbConnection();
+
+// sequelize
+//   .authenticate()
+//   .then((succ) => {
+//     console.log("Connection has been established successfully.");
+//   })
+//   .catch((error) => {
+//     console.error("Unable to connect to the database:", error);
+//   });
 
 const app = express();
 const port = 3000;
@@ -11,26 +41,66 @@ app.get("/", (req, res) => {
   res.send("Hello World!!");
 });
 
+const User = sequelize.define(
+  "User",
+  {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    password: {
+      type: DataTypes.STRING,
+      defaultValue: false,
+    },
+    address: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+  },
+  {
+    timestamps: true,
+    tableName: "users",
+    underscored: true,
+  },
+);
+
+const Todo = sequelize.define(
+  "Todo",
+  {
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    status: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+  },
+  {
+    timestamps: true,
+    tableName: "todos",
+    underscored: true,
+  },
+);
+
 // assume it as database
-let todos = [
-  { id: 1, title: "react", status: false },
-  { id: 2, title: "css", status: true },
-  { id: 3, title: "mongdob", status: true },
-  { id: 4, title: "postress", status: true },
-  { id: 5, title: "node-js", status: true },
-  { id: 6, title: "express-js", status: true },
-  { id: 7, title: "tailwind-js", status: true },
-  { id: 8, title: "rabbitmq", status: true },
-  { id: 9, title: "redis", status: true },
-];
+// let todos = [
+//   { id: 1, title: "react", status: false },
+//   { id: 2, title: "css", status: true },
+// ];
 
-let highestId = 9;
-
-app.get("/api/todos", (req, res) => {
+app.get("/api/todos", async (req, res) => {
+  let todos = await Todo.findAll();
+  console.log(todos);
   res.send(todos);
 });
 
-app.post("/api/todos", (req, res) => {
+app.post("/api/todos", async (req, res) => {
   console.log(req.body);
 
   if (!req.body.title) {
@@ -57,36 +127,52 @@ app.post("/api/todos", (req, res) => {
     });
   }
 
-  highestId++;
-
-  todos.push({
-    // id: todos.length + 1,
-    id: highestId,
+  let todo = await Todo.create({
     title: req.body.title,
-    status: false,
   });
-  res.send({ msg: "todos created" });
+
+  res.send({ msg: "todos created", todo: todo });
 });
 
-app.put("/api/todos/:id", (req, res) => {
-  console.log(todos[req.params.id]);
+app.put("/api/todos/:id", async (req, res) => {
+  // console.log(todos[req.params.id]);
   console.log(req.params.id);
+  await Todo.update(
+    {
+      title: req.body.title,
+      status: req.body.status,
+    },
+    {
+      where: {
+        id: req.params.id,
+      },
+    },
+  );
 
-  todos = todos.map((el) => {
-    if (el.id == req.params.id) {
-      return { ...el, status: req.body.status, title: req.body.title };
-    }
-    return el;
-  });
+  // todos = todos.map((el) => {
+  //   if (el.id == req.params.id) {
+  //     return { ...el, status: req.body.status, title: req.body.title };
+  //   }
+  //   return el;
+  // });
 
   res.send("todos updated");
 });
 
-app.delete("/api/todos/:id", (req, res) => {
+app.delete("/api/todos/:id", async (req, res) => {
   // let a = b + c;
-  todos = todos.filter((todo) => {
-    return todo.id != req.params.id;
+  // todos = todos.filter((todo) => {
+  //   return todo.id != req.params.id;
+  // });
+
+  await Todo.destroy({
+    where: {
+      id: req.params.id,
+    },
   });
+
+  // let todo = await Todo.findByPk(req.params.id)
+  // await  todo.destroy()
 
   res.send("todos delete");
 });

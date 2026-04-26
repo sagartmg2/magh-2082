@@ -1,4 +1,4 @@
-function Button({ label, children, size, rounded, className, ...rest }) {
+function Button({ label, children, size, rounded,icon, className, ...rest }) {
   let sizeClss = "px-6 py-2";
   if (size == "xs") {
     sizeClss = "px-1 py-1";
@@ -18,6 +18,7 @@ function Button({ label, children, size, rounded, className, ...rest }) {
       // onClick={onClick}
       className={classes}
     >
+      {icon}
       {label}
       {children}
     </button>

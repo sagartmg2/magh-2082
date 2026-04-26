@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import Button from "./components/ui/Button";
+import { Plus } from "lucide-react";
 
 export default function TodosCrudApi() {
   const [todos, setTodos] = useState([]);
@@ -22,6 +23,7 @@ export default function TodosCrudApi() {
       setTodos(res.data);
     });
   };
+  
 
   useEffect(() => {
     fetchData();
@@ -38,20 +40,29 @@ export default function TodosCrudApi() {
       });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let title = e.target.title.value;
 
-    axios
-      .post("http://localhost:3000/api/todos", {
+    // axios
+    //   .post("http://localhost:3000/api/todos", {
+    //     title: title,
+    //   })
+    //   .then((res) => {
+    //     fetchData();
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+
+    try {
+      let todos = await axios.post("http://localhost:3000/api/todos", {
         title: title,
-      })
-      .then((res) => {
-        fetchData();
-      })
-      .catch((err) => {
-        console.log(err);
       });
+      fetchData();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const editTodo = (todo) => {
@@ -59,7 +70,7 @@ export default function TodosCrudApi() {
   };
 
   const updateTodo = (e) => {
-    console.log("udpate todo")
+    console.log("udpate todo");
     e.preventDefault();
 
     // let temp = [...todos];
@@ -90,7 +101,7 @@ export default function TodosCrudApi() {
           className="border p-3 disabled:bg-gray-200"
         />
         <Button size="lg" rounded>
-          <span>Add</span>
+           <Plus/> <span>Add</span>
         </Button>
       </form>
 
@@ -119,7 +130,6 @@ export default function TodosCrudApi() {
       </ul>
 
       {editableTodo != null && (
-        
         <div
           onClick={() => {
             seteditableTodo(null);
