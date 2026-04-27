@@ -131,6 +131,7 @@ app.post("/api/todos", async (req, res) => {
     title: req.body.title,
   });
 
+      console.log(todos)
   res.send({ msg: "todos created", todo: todo });
 });
 
