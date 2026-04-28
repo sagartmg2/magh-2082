@@ -1,9 +1,7 @@
-// const express = require("express")
 import express from "express"
-import authRoute from "./routes/auth"
-import productRoute from "./routes/product"
-
-// const sequelize = new Sequelize('postgres://user:pass@example.com:5432/dbname') //
+import "./connections/database.js"
+import authRoute from "./routes/auth.js"
+import productRoute from "./routes/product.js"
 
 
 const app = express()

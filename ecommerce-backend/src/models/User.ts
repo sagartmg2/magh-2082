@@ -1,9 +1,5 @@
-/* 
-
-
-const { Sequelize, DataTypes } = require('sequelize');
-con = new Sequelize('sqlite::memory:');st sequelize /// import this from server.js
-
+import { DataTypes } from 'sequelize'
+import sequelize from "../connections/database.js";
 
 const User = sequelize.define(
   'User',
@@ -17,16 +13,26 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       // allowNull defaults to true
     },
+    email: {
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: false
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
   },
   {
-    // Other model options go here
+    tableName: "users",
+    timestamps: true,
+    underscored: true,
   },
 );
 
-// `sequelize.define` also returns the model
-conso
+console.log(User)
+// console.log("User model created")
 
-*/
+export default User;
 
 
-// TODO: eXPORT User
