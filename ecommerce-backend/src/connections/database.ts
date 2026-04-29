@@ -1,7 +1,9 @@
 // const { Sequelize } = require('sequelize');
 import { Sequelize } from "sequelize"
 
-const sequelize = new Sequelize('postgres://postgres:postgres@localhost:5439/postgres')
+const sequelize = new Sequelize('postgres://postgres:postgres@localhost:5439/postgres',{
+    logging:false
+})
 
 // try {
 //     await sequelize.authenticate();

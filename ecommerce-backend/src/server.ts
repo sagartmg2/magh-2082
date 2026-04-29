@@ -5,7 +5,7 @@ import productRoute from "./routes/product.js"
 
 
 const app = express()
-const port = 3000
+const port = 4000
 
 app.use(express.json())
 app.use(authRoute);
@@ -13,7 +13,7 @@ app.use(productRoute);
 
 
 app.get('/', (req, res) => {
-    res.send('Hello World!')
+    res.send('Hello World updated!')
 })
 
 // app.post('/api/login', (req, res) => {

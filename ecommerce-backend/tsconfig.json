@@ -36,5 +36,6 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
+    
   }
 }
