@@ -1,22 +1,30 @@
 import React from "react";
-import { Link } from "react-router";
 
-export default function Login() {
+export default function SignUp() {
   return (
     <div className="min-h-screen bg-[#f8f8fb] flex items-center justify-center">
       <div className="bg-white w-[544px] px-[56px] py-[50px] shadow-[0px_0px_25px_10px_#f8f8fb] flex flex-col items-center">
         {/* Title */}
         <p className="font-['Josefin_Sans',sans-serif] font-bold text-[32px] text-black leading-normal mb-3">
-          Login
+          Sign Up
         </p>
 
         {/* Subtitle */}
         <p className="font-['Lato',sans-serif] not-italic text-[17px] text-[#9096b2] leading-normal mb-7 text-center">
-          Please login using account detail bellow.
+          Please create an account using the details below.
         </p>
 
+        {/* Full Name Input */}
+        <div className="w-[432px] h-[52px] bg-white border border-[#c2c5e1] rounded-[2px] flex items-center px-3 mb-[18px]">
+          <input
+            type="text"
+            placeholder="Full Name"
+            className="w-full h-full outline-none font-['Lato',sans-serif] not-italic text-[16px] text-[#9096b2] placeholder-[#9096b2] bg-transparent"
+          />
+        </div>
+
         {/* Email Input */}
-        <div className="w-[432px] h-[52px] bg-white border border-[#c2c5e1] rounded-[2px] flex items-center px-3 mb-[23px]">
+        <div className="w-[432px] h-[52px] bg-white border border-[#c2c5e1] rounded-[2px] flex items-center px-3 mb-[18px]">
           <input
             type="email"
             placeholder="Email Address"
@@ -25,7 +33,7 @@ export default function Login() {
         </div>
 
         {/* Password Input */}
-        <div className="w-[432px] h-[52px] bg-white border border-[#c2c5e1] rounded-[2px] flex items-center px-3 mb-4">
+        <div className="w-[432px] h-[52px] bg-white border border-[#c2c5e1] rounded-[2px] flex items-center px-3 mb-[18px]">
           <input
             type="password"
             placeholder="Password"
@@ -33,24 +41,24 @@ export default function Login() {
           />
         </div>
 
-        {/* Forgot Password */}
-        <div className="w-[432px] mb-5">
-          <p className="font-['Lato',sans-serif] not-italic text-[17px] text-[#9096b2] leading-normal cursor-pointer hover:underline">
-            Forgot your password?
-          </p>
+        {/* Confirm Password Input */}
+        <div className="w-[432px] h-[52px] bg-white border border-[#c2c5e1] rounded-[2px] flex items-center px-3 mb-5">
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            className="w-full h-full outline-none font-['Lato',sans-serif] not-italic text-[16px] text-[#9096b2] placeholder-[#9096b2] bg-transparent"
+          />
         </div>
 
-        {/* Sign In Button */}
+        {/* Create Account Button */}
         <button className="w-[432px] h-[52px] bg-[#f03e7a] text-white font-bold text-[16px] rounded-[2px] mb-5 hover:opacity-90 transition-opacity">
-          Sign In
+          Create Account
         </button>
 
         {/* Footer */}
         <p className="font-['Lato',sans-serif] not-italic text-[17px] text-[#9096b2] leading-normal">
-          Don't have an Account?
-          <Link to="/signup" className="cursor-pointer hover:underline">
-            Create account
-          </Link>
+          Already have an Account?{" "}
+          <span className="cursor-pointer hover:underline">Login</span>
         </p>
       </div>
     </div>
