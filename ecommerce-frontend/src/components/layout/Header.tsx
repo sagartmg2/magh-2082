@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { Link, useLocation } from "react-router";
 
-export default function Header() {
+export default function Header({ user, setUser }) {
   const [menuOpened, setMenuOpened] = useState(false);
   const location = useLocation();
 
@@ -32,7 +32,20 @@ export default function Header() {
 
           <div className="flex gap-6 ">
             <div className="flex gap-2">
-              <Link to="/login">Login</Link>
+              {user ? (
+                <>
+                  <span>ram bahadur</span>
+                  <span
+                    onClick={() => {
+                      setUser(null);
+                    }}
+                  >
+                    logout
+                  </span>
+                </>
+              ) : (
+                <Link to="/login">Login</Link>
+              )}
               <User />
             </div>
             <ShoppingCart />

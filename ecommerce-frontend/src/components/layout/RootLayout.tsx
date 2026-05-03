@@ -3,10 +3,10 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { Outlet } from "react-router";
 
-export default function RootLayout() {
+export default function RootLayout({ user, setUser }) {
   return (
     <div>
-      <Header />
+      <Header user={user} setUser={setUser} />
       <Outlet />
       <Footer />
     </div>

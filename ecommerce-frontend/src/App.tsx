@@ -3,15 +3,28 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import RootLayout from "./components/layout/RootLayout";
 import SignUp from "./pages/Signup";
+import { ToastContainer } from "react-toastify";
+import { useContext, useState } from "react";
 
 function App() {
+  // useContext;
+  //statement management: redux  zutstand;
+  // proprs-drilling;
+
+  const [user, setUser] = useState(null);
+
   const router = createBrowserRouter([
     {
       path: "",
-      Component: RootLayout,
+      // Component: RootLayout,
+      element: <RootLayout user={user} setUser={setUser} />,
       children: [
         { path: "/", Component: Home },
-        { path: "/login", Component: Login },
+        {
+          path: "/login",
+          //  Component: Login,
+          element: <Login setUser={setUser} />,
+        },
         { path: "/signup", Component: SignUp },
       ],
     },
@@ -19,6 +32,7 @@ function App() {
 
   return (
     <>
+      <ToastContainer />
       <RouterProvider router={router} />
     </>
   );

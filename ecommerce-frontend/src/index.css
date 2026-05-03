@@ -10,7 +10,8 @@
   --color-primary-dark: #0d0e43;
   --color-primary-light: #f6f5ff;
   --color-secondary: #fb2e86;
-}
+};
+
 @layer components {
   .container {
     @apply px-3 mx-auto;

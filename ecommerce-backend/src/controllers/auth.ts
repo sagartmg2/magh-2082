@@ -2,30 +2,41 @@ import bcrypt from "bcrypt";
 import { Request, Response } from "express"
 import User from "../models/User.js";
 
-export const login = (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
 
-    // zod  validation: 
+    try {
+        // zod  validation: 
+        let user = await User.findOne({
+            where: {
+                email: req.body.email
+            }
+        })
+        // @ts-ignore
 
-
-    let user = User.findOne({
-        where: {
-            email: req.body.email
+        let hashedPw = user?.getDataValue("password");
+        let userInfo = user?.toJSON();
+        delete userInfo?.password;
+        if (userInfo) {
+            let matched = await bcrypt.compare(req.body.password, hashedPw);
+            console.log({ matched });
+            // generate jwt token 
+            if (matched) {
+                return res.send({
+                    msg: "login sucdcess",
+                    user: userInfo,
+                    token:"eyasdfadsfafadsfasdeyasdfadsfaeyasdfadsfaeyasdfadsfaeyasdfadsfaeyasdfadsfaeyasdfadsfaeyasdfadsfaeyasdfadsfaeyasdfadsfaeyasdfadsfaeyasdfadsfaeyasdfadsfa"
+                })
+            }
         }
-    })
-
-    // @ts-ignore
-    let matched = bcrypt.compare(req.body.password, hash);
-
-    // generate jwt token 
-
-    res.send('login!')
-
-
-
-    res.status(401).send({
-        msg: "Invalid creadentials"
-    })
-
+        res.status(401).send({
+            msg: "Invalid creadentials"
+        })
+    } catch (err) {
+        console.log(err)
+        res.status(500).send({
+            msg: "Server Error. please try again later.."
+        })
+    }
 }
 
 

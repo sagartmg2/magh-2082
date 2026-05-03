@@ -1,10 +1,43 @@
+import axios from "axios";
 import React from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
-export default function Login() {
+export default function Login({ setUser }) {
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(e.target);
+
+    axios
+      .post("http://localhost:4000/api/login", {
+        email: e.target.email.value,
+        password: e.target.password.value,
+      })
+      .then((res) => {
+        toast("login success!");
+        console.log(res.data);
+        setUser(res.data.user);
+        // navigate("/");
+      })
+      .catch((err) => {
+        if (err.response.status == 401) {
+          toast.error("Invalid Credentails");
+        } else if (err.response.status == 400) {
+          toast.error(err.response.data.msg);
+        } else {
+          toast.error(err.response.data.msg);
+        }
+      });
+  };
+
   return (
     <div className="min-h-screen bg-[#f8f8fb] flex items-center justify-center">
-      <div className="bg-white w-[544px] px-[56px] py-[50px] shadow-[0px_0px_25px_10px_#f8f8fb] flex flex-col items-center">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white w-[544px] px-[56px] py-[50px] shadow-[0px_0px_25px_10px_#f8f8fb] flex flex-col items-center"
+      >
         {/* Title */}
         <p className="font-['Josefin_Sans',sans-serif] font-bold text-[32px] text-black leading-normal mb-3">
           Login
@@ -18,7 +51,9 @@ export default function Login() {
         {/* Email Input */}
         <div className="w-[432px] h-[52px] bg-white border border-[#c2c5e1] rounded-[2px] flex items-center px-3 mb-[23px]">
           <input
+            defaultValue={"buyer@gmail.com"}
             type="email"
+            name="email"
             placeholder="Email Address"
             className="w-full h-full outline-none font-['Lato',sans-serif] not-italic text-[16px] text-[#9096b2] placeholder-[#9096b2] bg-transparent"
           />
@@ -27,6 +62,8 @@ export default function Login() {
         {/* Password Input */}
         <div className="w-[432px] h-[52px] bg-white border border-[#c2c5e1] rounded-[2px] flex items-center px-3 mb-4">
           <input
+            defaultValue={"password"}
+            name="password"
             type="password"
             placeholder="Password"
             className="w-full h-full outline-none font-['Lato',sans-serif] not-italic text-[16px] text-[#9096b2] placeholder-[#9096b2] bg-transparent"
@@ -52,7 +89,7 @@ export default function Login() {
             Create account
           </Link>
         </p>
-      </div>
+      </form>
     </div>
   );
 }

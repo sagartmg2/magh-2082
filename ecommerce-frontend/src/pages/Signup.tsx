@@ -1,9 +1,33 @@
-import React from "react";
+import axios from "axios";
+import { Link } from "react-router";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function SignUp() {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(e.target);
+
+    axios
+      .post("http://localhost:4000/api/signup", {
+        firstName: e.target.first_name.value,
+        lastName: e.target.last_name.value,
+        email: e.target.email.value,
+        password: e.target.password.value,
+      })
+      .then((ress) => {
+        toast("signup success!");
+      })
+      .catch((err) => {
+        toast.error("something went wrong please try gagin later....!");
+      });
+  };
+
   return (
     <div className="min-h-screen bg-[#f8f8fb] flex items-center justify-center">
-      <div className="bg-white w-[544px] px-[56px] py-[50px] shadow-[0px_0px_25px_10px_#f8f8fb] flex flex-col items-center">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white w-[544px] px-[56px] py-[50px] shadow-[0px_0px_25px_10px_#f8f8fb] flex flex-col items-center"
+      >
         {/* Title */}
         <p className="font-['Josefin_Sans',sans-serif] font-bold text-[32px] text-black leading-normal mb-3">
           Sign Up
@@ -17,8 +41,18 @@ export default function SignUp() {
         {/* Full Name Input */}
         <div className="w-[432px] h-[52px] bg-white border border-[#c2c5e1] rounded-[2px] flex items-center px-3 mb-[18px]">
           <input
+            required
             type="text"
-            placeholder="Full Name"
+            name="first_name"
+            placeholder="First Name"
+            className="w-full h-full outline-none font-['Lato',sans-serif] not-italic text-[16px] text-[#9096b2] placeholder-[#9096b2] bg-transparent"
+          />
+        </div>
+        <div className="w-[432px] h-[52px] bg-white border border-[#c2c5e1] rounded-[2px] flex items-center px-3 mb-[18px]">
+          <input
+            type="text"
+            placeholder="Last Name"
+            name="last_name"
             className="w-full h-full outline-none font-['Lato',sans-serif] not-italic text-[16px] text-[#9096b2] placeholder-[#9096b2] bg-transparent"
           />
         </div>
@@ -26,6 +60,7 @@ export default function SignUp() {
         {/* Email Input */}
         <div className="w-[432px] h-[52px] bg-white border border-[#c2c5e1] rounded-[2px] flex items-center px-3 mb-[18px]">
           <input
+            name="email"
             type="email"
             placeholder="Email Address"
             className="w-full h-full outline-none font-['Lato',sans-serif] not-italic text-[16px] text-[#9096b2] placeholder-[#9096b2] bg-transparent"
@@ -35,6 +70,7 @@ export default function SignUp() {
         {/* Password Input */}
         <div className="w-[432px] h-[52px] bg-white border border-[#c2c5e1] rounded-[2px] flex items-center px-3 mb-[18px]">
           <input
+            name="password"
             type="password"
             placeholder="Password"
             className="w-full h-full outline-none font-['Lato',sans-serif] not-italic text-[16px] text-[#9096b2] placeholder-[#9096b2] bg-transparent"
@@ -58,9 +94,12 @@ export default function SignUp() {
         {/* Footer */}
         <p className="font-['Lato',sans-serif] not-italic text-[17px] text-[#9096b2] leading-normal">
           Already have an Account?{" "}
-          <span className="cursor-pointer hover:underline">Login</span>
+          <Link to="/login" className="cursor-pointer hover:underline">
+            Login
+          </Link>
         </p>
-      </div>
+      </form>
+      <ToastContainer />
     </div>
   );
 }
