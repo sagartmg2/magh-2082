@@ -2,9 +2,12 @@ import axios from "axios";
 import React from "react";
 import { Link, useNavigate } from "react-router";
 import { toast } from "react-toastify";
+import { login } from "../redux/features/userSlice";
+import { useDispatch } from "react-redux";
 
 export default function Login({ setUser }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -18,10 +21,13 @@ export default function Login({ setUser }) {
       .then((res) => {
         toast("login success!");
         console.log(res.data);
-        setUser(res.data.user);
+        // setUser(res.data.user);
         // navigate("/");
+        dispatch(login(res.data.user));
       })
       .catch((err) => {
+        console.log(err);
+
         if (err.response.status == 401) {
           toast.error("Invalid Credentails");
         } else if (err.response.status == 400) {

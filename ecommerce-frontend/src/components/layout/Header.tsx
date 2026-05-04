@@ -10,11 +10,17 @@ import {
   X,
 } from "lucide-react";
 import { Link, useLocation } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "../../redux/store";
+import { logout } from "../../redux/features/userSlice";
 
-export default function Header({ user, setUser }) {
+export default function Header() {
+  const reduxUser = useSelector((globalStore:RootState) => globalStore.user.value);
+  
   const [menuOpened, setMenuOpened] = useState(false);
   const location = useLocation();
-
+  const dispatch = useDispatch()
+  
   return (
     <>
       <div className=" bg-primary text-[#F1F1F1] font-lato">
@@ -32,12 +38,12 @@ export default function Header({ user, setUser }) {
 
           <div className="flex gap-6 ">
             <div className="flex gap-2">
-              {user ? (
+              {reduxUser ? (
                 <>
-                  <span>ram bahadur</span>
+                  <span>{reduxUser.firstName} {reduxUser.lastName}</span>
                   <span
                     onClick={() => {
-                      setUser(null);
+                      dispatch(logout())
                     }}
                   >
                     logout

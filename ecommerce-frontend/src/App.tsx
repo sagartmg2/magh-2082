@@ -7,11 +7,12 @@ import { ToastContainer } from "react-toastify";
 import { useContext, useState } from "react";
 
 function App() {
-  // useContext;
-  //statement management: redux  zutstand;
+  // useContext // for small application  // causes extra-renders ;
+  // statement management: redux  zutstand;
   // proprs-drilling;
 
   const [user, setUser] = useState(null);
+  const [counter, setCounter] = useState(null);
 
   const router = createBrowserRouter([
     {
