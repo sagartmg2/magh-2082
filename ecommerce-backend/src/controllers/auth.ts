@@ -1,5 +1,7 @@
 import bcrypt from "bcrypt";
 import { Request, Response } from "express"
+import jwt from 'jsonwebtoken'
+
 import User from "../models/User.js";
 
 export const login = async (req: Request, res: Response) => {
@@ -21,10 +23,12 @@ export const login = async (req: Request, res: Response) => {
             console.log({ matched });
             // generate jwt token 
             if (matched) {
+
+                const token = jwt.sign(userInfo, 'shhhhh');
                 return res.send({
                     msg: "login sucdcess",
-                    user: userInfo,
-                    token:"eyasdfadsfafadsfasdeyasdfadsfaeyasdfadsfaeyasdfadsfaeyasdfadsfaeyasdfadsfaeyasdfadsfaeyasdfadsfaeyasdfadsfaeyasdfadsfaeyasdfadsfaeyasdfadsfaeyasdfadsfa"
+                    user: { ...userInfo, role: "guest" },
+                    token: token
                 })
             }
         }
