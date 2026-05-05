@@ -15,12 +15,14 @@ import type { RootState } from "../../redux/store";
 import { logout } from "../../redux/features/userSlice";
 
 export default function Header() {
-  const reduxUser = useSelector((globalStore:RootState) => globalStore.user.value);
-  
+  const reduxUser = useSelector(
+    (globalStore: RootState) => globalStore.user.value,
+  );
+
   const [menuOpened, setMenuOpened] = useState(false);
   const location = useLocation();
-  const dispatch = useDispatch()
-  
+  const dispatch = useDispatch();
+
   return (
     <>
       <div className=" bg-primary text-[#F1F1F1] font-lato">
@@ -40,10 +42,12 @@ export default function Header() {
             <div className="flex gap-2">
               {reduxUser ? (
                 <>
-                  <span>{reduxUser.firstName} {reduxUser.lastName}</span>
+                  <span>
+                    {reduxUser.firstName} {reduxUser.lastName}
+                  </span>
                   <span
                     onClick={() => {
-                      dispatch(logout())
+                      dispatch(logout());
                     }}
                   >
                     logout
@@ -73,8 +77,14 @@ export default function Header() {
             <li>
               <Link to="/">home </Link>
             </li>
-            <li>products </li>
-            <li>orders</li>
+            <li>
+              <Link to="/products">products </Link>
+            </li>
+            {reduxUser && (
+              <li>
+                <Link to="/orders">orders </Link>
+              </li>
+            )}
           </ul>
         </div>
         <div className=" flex gap-0.5">

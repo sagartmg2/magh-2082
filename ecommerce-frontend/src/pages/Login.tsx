@@ -22,8 +22,9 @@ export default function Login({ setUser }) {
         toast("login success!");
         console.log(res.data);
         // setUser(res.data.user);
-        // navigate("/");
+        localStorage.setItem("token",res.data.token)
         dispatch(login(res.data.user));
+        // navigate("/");
       })
       .catch((err) => {
         console.log(err);

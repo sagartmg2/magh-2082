@@ -5,6 +5,9 @@ import RootLayout from "./components/layout/RootLayout";
 import SignUp from "./pages/Signup";
 import { ToastContainer } from "react-toastify";
 import { useContext, useState } from "react";
+import Products from "./pages/Products";
+import Orders from "./pages/Orders";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   // useContext // for small application  // causes extra-renders ;
@@ -21,6 +24,12 @@ function App() {
       element: <RootLayout user={user} setUser={setUser} />,
       children: [
         { path: "/", Component: Home },
+        { path: "/products", Component: Products },
+        {
+          path: "",
+          Component: ProtectedRoute,
+          children: [{ path: "/orders", Component: Orders }],
+        },
         {
           path: "/login",
           //  Component: Login,
