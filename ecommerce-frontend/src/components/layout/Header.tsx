@@ -23,6 +23,8 @@ export default function Header() {
   const location = useLocation();
   const dispatch = useDispatch();
 
+  console.log("HEADER-RENDER");
+
   return (
     <>
       <div className=" bg-primary text-[#F1F1F1] font-lato">
