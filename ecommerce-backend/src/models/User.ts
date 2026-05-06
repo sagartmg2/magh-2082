@@ -22,6 +22,10 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false
     },
+    image: {  // uploads/user-245rqwer.png
+      type: DataTypes.STRING,
+      allowNull: true
+    },
   },
   {
     tableName: "users",
