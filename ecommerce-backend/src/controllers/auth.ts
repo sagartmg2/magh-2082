@@ -83,27 +83,16 @@ export const signup = async (req: Request, res: Response) => {
 
 
 export const getUser = async (req: Request, res: Response) => {
-    let token = req.headers.authorization?.split(" ")[1]
 
-    if (token) {
 
-        try {
-            let decoded = jwt.verify(token, 'shhhhh');
-            console.log(decoded);
+    console.log("req.user", req.user)
 
-            let user = await User.findByPk(decoded.id)
+    let user = await User.findByPk(req.user.id)
 
-            if(user){
-                res.send(user)
-            }
-
-        } catch (err) {
-
-            res.status(401).send("unaunticated")
-            console.log(err);
-        }
+    if (user) {
+        return res.send(user)
     }
-    res.status(401).send("unaunticated")
+    res.status(401).send(user)
 
 }
 
