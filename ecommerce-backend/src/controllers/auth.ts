@@ -87,7 +87,7 @@ export const getUser = async (req: Request, res: Response) => {
 
     console.log("req.user", req.user)
 
-    let user = await User.findByPk(req.user.id)
+    let user = await User.findByPk(req.user?.id)
 
     if (user) {
         return res.send(user)

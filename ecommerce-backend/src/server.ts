@@ -4,10 +4,13 @@ import authRoute from "./routes/auth.js"
 import productRoute from "./routes/product.js"
 import cors from "cors"
 import checkAuthentication from "./middlewares/checkAuthentication.js"
+// import { User as UserType } from "./types/User.js"
 
 const app = express()
 const port = 4000
 
+
+// let user:UserType = {}
 
 
 app.use(cors())   // global middleware           // cors()  return () =>{ }

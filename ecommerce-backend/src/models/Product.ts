@@ -1,0 +1,47 @@
+import { DataTypes } from 'sequelize'
+import sequelize from "../connections/database.js";
+import User from './User.js';
+
+const Product = sequelize.define(
+    'Product',
+    {
+        // id: automatic, 
+        title: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        // category: {
+        //     type: DataTypes.STRING,
+        //     allowNull: false
+        // },
+        price: {
+            type: DataTypes.DECIMAL(10, 2),
+            defaultValue: 0,
+            allowNull: false
+        },
+        description: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        stock: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+            allowNull: false,
+        },
+        userId: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: User
+            },
+            allowNull: false
+        }
+    },
+    {
+        tableName: "products",
+        timestamps: true,
+        underscored: true,
+    }
+);
+
+
+export default Product
