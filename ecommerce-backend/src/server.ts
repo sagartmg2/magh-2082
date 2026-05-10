@@ -1,10 +1,15 @@
 import express from "express"
 import "./connections/database.js"
+import "./models/index.js"
 import authRoute from "./routes/auth.js"
 import productRoute from "./routes/product.js"
 import cors from "cors"
-import checkAuthentication from "./middlewares/checkAuthentication.js"
+import path from "path"
 // import { User as UserType } from "./types/User.js"
+
+
+
+// console.log(path.join("/upload", "/products"));
 
 const app = express()
 const port = 4000

@@ -1,8 +1,23 @@
+import path from "path"
 import express, { Request, Response } from "express"
+import multer from "multer"
+
 const router = express.Router()
 import checkAuthentication from "../middlewares/checkAuthentication.js"
 import { createProduct, getProducts } from "../controllers/product.js"
 
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads')
+    },
+    filename: function (req, file, cb) {
+        const extension = path.extname(file.originalname)
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9) + extension
+        cb(null, file.fieldname + '-' + uniqueSuffix)
+    }
+})
+
+const upload = multer({ storage: storage })
 
 router.get('/api/products', getProducts)
 
@@ -28,7 +43,7 @@ router.get('/api/products', getProducts)
 
 
 //  route-level middelware
-router.post('/api/products', checkAuthentication, createProduct)
+router.post('/api/products', checkAuthentication, upload.array('images', 12), createProduct)
 
 
 router.put('/api/products/:id', checkAuthentication, (req, res) => {

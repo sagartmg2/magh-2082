@@ -67,7 +67,8 @@ export const signup = async (req: Request, res: Response) => {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             email: req.body.email,
-            password: hashedPw
+            password: hashedPw,
+            isSeller: req.body.isSeller
         })
         res.send('signup!')
 

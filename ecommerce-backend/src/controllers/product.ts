@@ -2,6 +2,7 @@
 
 import { Request, Response } from "express"
 import Product from "../models/Product.js";
+import ProductImage from "../models/ProductImage.js";
 
 
 export const getProducts = async (req: Request, res: Response) => {
@@ -28,7 +29,7 @@ export const getProducts = async (req: Request, res: Response) => {
 // named exports
 export const createProduct = async (req: Request, res: Response) => {
     console.log("req.user", req.user);
-    // res.send(`post : product created! by user, ${req.user.firstName}`)
+    console.log("req.files/images", req.files);
 
     try {
         const {
@@ -44,6 +45,16 @@ export const createProduct = async (req: Request, res: Response) => {
             description,
             stock,
             userId: req.user?.id,
+        })
+
+        console.log(product);
+
+        // @ts-ignore
+        req.files?.forEach(el => {
+            ProductImage.create({
+                path: el.path,
+                productId: product.getDataValue("id")
+            })
         })
 
         res.send(product)

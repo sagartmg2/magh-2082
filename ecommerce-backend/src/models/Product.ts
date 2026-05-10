@@ -34,7 +34,12 @@ const Product = sequelize.define(
                 model: User
             },
             allowNull: false
-        }
+        },
+        // image: {
+        //     type: DataTypes.STRING,
+        //     allowNull: true,
+        // },
+
     },
     {
         tableName: "products",
@@ -42,6 +47,8 @@ const Product = sequelize.define(
         underscored: true,
     }
 );
+
+// product.hasMany
 
 
 export default Product
