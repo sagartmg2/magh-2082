@@ -5,13 +5,16 @@ import RootLayout from "./components/layout/RootLayout";
 import SignUp from "./pages/Signup";
 import { ToastContainer } from "react-toastify";
 import { useContext, useEffect, useState } from "react";
-import Products from "./pages/Products";
+import Products from "./pages/products/Products";
 import Orders from "./pages/Orders";
 import ProtectedRoute from "./components/ProtectedRoute";
 import axios from "axios";
 import { login } from "./redux/features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "./redux/store";
+import ResourceNotFound from "./pages/ResourceNotFound";
+import Create from "./pages/products/Create";
+import Forbidden from "./pages/Forbidden";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -57,7 +60,8 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "",
-      element: <RootLayout user={user} setUser={setUser} />,
+      // element: <RootLayout user={user} setUser={setUser} />,
+      Component: RootLayout,
       children: [
         { path: "/", Component: Home },
         { path: "/products", Component: Products },
@@ -67,11 +71,18 @@ function App() {
           children: [{ path: "/orders", Component: Orders }],
         },
         {
+          path: "",
+          element: <ProtectedRoute isSeller={true} />,
+          children: [{ path: "sellers/products/add", Component: Create }],
+        },
+        {
           path: "/login",
           //  Component: Login,
           element: <Login setUser={setUser} />,
         },
         { path: "/signup", Component: SignUp },
+        { path: "/forbidden", Component: Forbidden },
+        { path: "*", Component: ResourceNotFound },
       ],
     },
   ]);

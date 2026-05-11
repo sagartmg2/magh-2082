@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import type { RootState } from "../redux/store";
+import type { RootState } from "../../redux/store";
+import { Link } from "react-router";
 
 const products = [
   {
@@ -178,9 +179,9 @@ export default function Products() {
         </p>
       </div>
       {reduxUser?.isSeller && (
-        <button className="border p-4 bg-secondary text-white">
+        <Link to="/sellers/products/add" className="border p-4 bg-secondary text-white">
           CREATE Product
-        </button>
+        </Link>
       )}
 
       {/* Layout */}

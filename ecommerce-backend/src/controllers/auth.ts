@@ -13,8 +13,6 @@ export const login = async (req: Request, res: Response) => {
                 email: req.body.email
             }
         })
-        // @ts-ignore
-
         let hashedPw = user?.getDataValue("password");
         let userInfo = user?.toJSON();
         delete userInfo?.password;
