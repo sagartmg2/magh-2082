@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize'
 import sequelize from "../connections/database.js";
 import User from './User.js';
+import Category from './Category.js';
 
 const Product = sequelize.define(
     'Product',
@@ -10,10 +11,13 @@ const Product = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false
         },
-        // category: {
-        //     type: DataTypes.STRING,
-        //     allowNull: false
-        // },
+        categoryId: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: Category
+            },
+            allowNull: false
+        },
         price: {
             type: DataTypes.DECIMAL(10, 2),
             defaultValue: 0,

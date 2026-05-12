@@ -3,6 +3,7 @@ import "./connections/database.js"
 import "./models/index.js"
 import authRoute from "./routes/auth.js"
 import productRoute from "./routes/product.js"
+import categoryRoute from "./routes/categories.js"
 import cors from "cors"
 import path from "path"
 // import { User as UserType } from "./types/User.js"
@@ -37,6 +38,7 @@ app.use((req, res, next) => {
 // app.use(checkAuthentication)  // global middeware
 app.use(authRoute);
 app.use(productRoute);
+app.use(categoryRoute);
 
 // app.use(checkAuthentication,orderRoute);
 
