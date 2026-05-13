@@ -22,9 +22,13 @@ export default function Login({ setUser }) {
         toast("login success!");
         console.log(res.data);
         // setUser(res.data.user);
-        localStorage.setItem("token",res.data.token)
+        localStorage.setItem("token", res.data.token);
         dispatch(login(res.data.user));
-        // navigate("/");
+        if (res.data.user.isAdmin) {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/");
+        }
       })
       .catch((err) => {
         console.log(err);

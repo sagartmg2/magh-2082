@@ -15,6 +15,9 @@ import type { RootState } from "./redux/store";
 import ResourceNotFound from "./pages/ResourceNotFound";
 import Create from "./pages/products/Create";
 import Forbidden from "./pages/Forbidden";
+import AdminRootLayout from "./components/layout/admin/AdminRootLayout";
+import Categories from "./pages/admin/Categories";
+import Dashboard from "./pages/admin/Dashboard";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -59,6 +62,21 @@ function App() {
 
   const router = createBrowserRouter([
     {
+      path: "admin",
+      element: <ProtectedRoute forAdmin={true} />,
+      children: [
+        {
+          path: "",
+          Component: AdminRootLayout,
+          children: [
+            { path: "categories", Component: Categories },
+            { path: "dashboard", Component: Dashboard },
+            { path: "products", Component: Categories },
+          ],
+        },
+      ],
+    },
+    {
       path: "",
       // element: <RootLayout user={user} setUser={setUser} />,
       Component: RootLayout,
@@ -72,7 +90,7 @@ function App() {
         },
         {
           path: "",
-          element: <ProtectedRoute isSeller={true} />,
+          element: <ProtectedRoute forSeller={true} />,
           children: [{ path: "sellers/products/add", Component: Create }],
         },
         {

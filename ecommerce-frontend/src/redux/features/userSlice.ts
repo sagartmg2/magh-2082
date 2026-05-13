@@ -6,6 +6,7 @@ export interface UserState {
         lastName: string;
         email: string;
         isSeller: boolean;
+        isAdmin: boolean;
     }
 }
 

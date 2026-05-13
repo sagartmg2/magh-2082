@@ -66,6 +66,9 @@ export default function CreateProduct() {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+
+    console.log(e.target.images.files);
+    return;
     setSuccess(false);
     setServerError(null);
 
@@ -230,6 +233,10 @@ export default function CreateProduct() {
                 className={inputClass(false) + " resize-none"}
               />
             </Field>
+          </div>
+
+          <div>
+            <input name="images" type="file" multiple />
           </div>
 
           {/* Footer */}

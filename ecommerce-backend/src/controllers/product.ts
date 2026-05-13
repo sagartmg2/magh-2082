@@ -37,6 +37,7 @@ export const createProduct = async (req: Request, res: Response) => {
             price,
             description,
             stock,
+            categoryId
         } = req.body
 
         let product = await Product.create({
@@ -45,6 +46,7 @@ export const createProduct = async (req: Request, res: Response) => {
             description,
             stock,
             userId: req.user?.id,
+            categoryId: categoryId || 1
         })
 
         console.log(product);
