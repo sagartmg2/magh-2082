@@ -8,24 +8,23 @@ export const login = async (req: Request, res: Response) => {
 
     try {
         // zod  validation: 
+
         let user = await User.findOne({
             where: {
                 email: req.body.email
             }
         })
-        let hashedPw = user?.getDataValue("password");
-        let userInfo = user?.toJSON();
-        delete userInfo?.password;
-        if (userInfo) {
+        if (user) {
+            let hashedPw = user?.getDataValue("password");
+            let userInfo = user?.toJSON();
+            delete userInfo?.password;
             let matched = await bcrypt.compare(req.body.password, hashedPw);
-            console.log({ matched });
-            // generate jwt token 
-            if (matched) {
 
+            if (matched) {
                 const token = jwt.sign(userInfo, 'shhhhh');
                 return res.send({
-                    msg: "login sucdcess",
-                    user: { ...userInfo, role: "guest" },
+                    msg: "login success",
+                    user: userInfo,
                     token: token
                 })
             }
@@ -83,7 +82,6 @@ export const signup = async (req: Request, res: Response) => {
 
 export const getUser = async (req: Request, res: Response) => {
 
-
     console.log("req.user", req.user)
 
     let user = await User.findByPk(req.user?.id)
@@ -91,6 +89,7 @@ export const getUser = async (req: Request, res: Response) => {
     if (user) {
         return res.send(user)
     }
+
     res.status(401).send(user)
 
 }

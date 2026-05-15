@@ -1,102 +1,83 @@
-import { useState, ChangeEvent, FormEvent } from "react";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import type { ChangeEvent, SyntheticEvent } from "react";
 
-interface ProductForm {
-  title: string;
-  price: string;
-  stock: string;
-  description: string;
-}
-
-interface FormErrors {
-  title?: string;
-  price?: string;
-  stock?: string;
-}
-
-const initialForm: ProductForm = {
+const initialForm = {
   title: "",
   price: "",
   stock: "",
   description: "",
+  categoryId: null,
 };
 
 export default function CreateProduct() {
-  const [form, setForm] = useState<ProductForm>(initialForm);
-  const [errors, setErrors] = useState<FormErrors>({});
+  const [form, setForm] = useState(initialForm);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [categories, setCategories] = useState<{ title: string; id: number }[]>(
+    [],
+  );
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
-  // ── Validation ──────────────────────────────────────────────────────────────
-  function validate(): FormErrors {
-    const errs: FormErrors = {};
+  useEffect(() => {
+    axios
+      .get("http://localhost:4000/api/categories")
+      .then((res) => setCategories(res.data.data));
+  }, []);
 
-    if (!form.title.trim()) {
-      errs.title = "Title is required.";
-    }
-
-    const price = parseFloat(form.price);
-    if (!form.price) {
-      errs.price = "Price is required.";
-    } else if (isNaN(price) || price < 0) {
-      errs.price = "Price must be a positive number.";
-    } else if (!/^\d+(\.\d{1,2})?$/.test(form.price)) {
-      errs.price = "Price can have at most 2 decimal places.";
-    }
-
-    const stock = parseInt(form.stock, 10);
-    if (form.stock !== "" && (isNaN(stock) || stock < 0)) {
-      errs.stock = "Stock must be a non-negative integer.";
-    }
-
-    return errs;
-  }
-
-  // ── Handlers ─────────────────────────────────────────────────────────────────
   function handleChange(
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-    // Clear the field error on change
-    if (errors[name as keyof FormErrors]) {
-      setErrors((prev) => ({ ...prev, [name]: undefined }));
-    }
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   }
 
-  async function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    console.log(e.target.images.files);
-    return;
+    const errs: Record<string, string> = {};
+    if (!form.title.trim()) errs.title = "Title is required.";
+    const price = parseFloat(form.price);
+    if (!form.price) errs.price = "Price is required.";
+    else if (isNaN(price) || price < 0)
+      errs.price = "Price must be a positive number.";
+    else if (!/^\d+(\.\d{1,2})?$/.test(form.price))
+      errs.price = "Price can have at most 2 decimal places.";
+    const stock = parseInt(form.stock, 10);
+    if (form.stock !== "" && (isNaN(stock) || stock < 0))
+      errs.stock = "Stock must be a non-negative integer.";
+
+    if (Object.keys(errs).length) return setErrors(errs);
+
+    setLoading(true);
     setSuccess(false);
     setServerError(null);
 
-    const errs = validate();
-    if (Object.keys(errs).length > 0) {
-      setErrors(errs);
-      return;
-    }
-
-    setLoading(true);
     try {
-      const payload = {
-        title: form.title.trim(),
-        price: parseFloat(parseFloat(form.price).toFixed(2)),
-        stock: form.stock !== "" ? parseInt(form.stock, 10) : 0,
-        description: form.description.trim() || null,
-      };
+      let images = (
+        e.currentTarget.elements.namedItem("images") as HTMLInputElement
+      ).files;
 
-      const res = await fetch("/products", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      console.log(images);
+      const formData = new FormData();
+      formData.append("title", form.title.trim());
+      formData.append(
+        "price",
+        String(parseFloat(parseFloat(form.price).toFixed(2))),
+      );
+      formData.append("stock", form.stock !== "" ? String(stock) : "0");
+      formData.append("description", form.description.trim());
+      formData.append("categoryId", form.categoryId);
 
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data?.message ?? `Server error: ${res.status}`);
+      for (let i = 0; i < images.length; i++) {
+        formData.append("images", images[i]);
       }
+
+      await axios.post("http://localhost:4000/api/products", formData, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
 
       setForm(initialForm);
       setErrors({});
@@ -110,90 +91,86 @@ export default function CreateProduct() {
     }
   }
 
-  // ── UI ───────────────────────────────────────────────────────────────────────
+  const inputCls = (field: string) =>
+    `w-full rounded-lg border px-3 py-2 text-sm text-gray-900 placeholder-gray-400
+     focus:outline-none focus:ring-2 transition-shadow
+     ${errors[field] ? "border-red-400 focus:ring-red-200" : "border-gray-200 focus:ring-indigo-200 focus:border-indigo-400"}`;
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-start justify-center py-12 px-4">
       <div className="w-full max-w-lg">
-        {/* Header */}
         <div className="mb-6">
-          <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">
-            New product
-          </h1>
+          <h1 className="text-2xl font-semibold text-gray-900">New product</h1>
           <p className="mt-1 text-sm text-gray-500">
             Fill in the details below to add a product to your catalogue.
           </p>
         </div>
 
-        {/* Card */}
         <form
           onSubmit={handleSubmit}
           noValidate
           className="bg-white border border-gray-200 rounded-xl shadow-sm divide-y divide-gray-100"
         >
           <div className="px-6 py-5 space-y-5">
-            {/* Success banner */}
             {success && (
-              <div className="flex items-center gap-2 rounded-lg bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm text-emerald-700">
-                <svg
-                  className="w-4 h-4 shrink-0"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
+              <div className="rounded-lg bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm text-emerald-700">
                 Product created successfully.
               </div>
             )}
-
-            {/* Server error banner */}
             {serverError && (
-              <div className="flex items-center gap-2 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
-                <svg
-                  className="w-4 h-4 shrink-0"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
-                  />
-                </svg>
+              <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
                 {serverError}
               </div>
             )}
 
             {/* Title */}
-            <Field label="Title" required error={errors.title}>
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">
+                Title <span className="text-red-500">*</span>
+              </label>
               <input
-                id="title"
                 name="title"
                 type="text"
                 value={form.title}
                 onChange={handleChange}
                 placeholder="e.g. Wireless Headphones"
                 maxLength={255}
-                className={inputClass(!!errors.title)}
+                className={inputCls("title")}
               />
-            </Field>
+              {errors.title && (
+                <p className="text-xs text-red-600">{errors.title}</p>
+              )}
+            </div>
+
+            {/* Category */}
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">
+                Category
+              </label>
+              <select
+                name="categoryId"
+                onChange={handleChange}
+                className={inputCls("category")}
+              >
+                {categories.map((c) => (
+                  <option value={c.id} key={c.title}>
+                    {c.title}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             {/* Price + Stock */}
             <div className="grid grid-cols-2 gap-4">
-              <Field label="Price (USD)" required error={errors.price}>
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  Price (USD) <span className="text-red-500">*</span>
+                </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm select-none">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
                     $
                   </span>
                   <input
-                    id="price"
                     name="price"
                     type="number"
                     value={form.price}
@@ -201,14 +178,22 @@ export default function CreateProduct() {
                     placeholder="0.00"
                     min={0}
                     step="0.01"
-                    className={inputClass(!!errors.price) + " pl-7"}
+                    className={inputCls("price") + " pl-7"}
                   />
                 </div>
-              </Field>
+                {errors.price && (
+                  <p className="text-xs text-red-600">{errors.price}</p>
+                )}
+              </div>
 
-              <Field label="Stock" error={errors.stock} hint="Defaults to 0">
+              <div className="space-y-1">
+                <div className="flex items-baseline justify-between">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Stock
+                  </label>
+                  <span className="text-xs text-gray-400">Defaults to 0</span>
+                </div>
                 <input
-                  id="stock"
                   name="stock"
                   type="number"
                   value={form.stock}
@@ -216,26 +201,35 @@ export default function CreateProduct() {
                   placeholder="0"
                   min={0}
                   step={1}
-                  className={inputClass(!!errors.stock)}
+                  className={inputCls("stock")}
                 />
-              </Field>
+                {errors.stock && (
+                  <p className="text-xs text-red-600">{errors.stock}</p>
+                )}
+              </div>
             </div>
 
             {/* Description */}
-            <Field label="Description" hint="Optional">
+            <div className="space-y-1">
+              <div className="flex items-baseline justify-between">
+                <label className="block text-sm font-medium text-gray-700">
+                  Description
+                </label>
+                <span className="text-xs text-gray-400">Optional</span>
+              </div>
               <textarea
-                id="description"
                 name="description"
                 value={form.description}
                 onChange={handleChange}
                 placeholder="Describe your product…"
                 rows={3}
-                className={inputClass(false) + " resize-none"}
+                className={inputCls("description") + " resize-none"}
               />
-            </Field>
+            </div>
           </div>
 
-          <div>
+          {/* Images */}
+          <div className="px-6 py-4">
             <input name="images" type="file" multiple />
           </div>
 
@@ -256,76 +250,13 @@ export default function CreateProduct() {
             <button
               type="submit"
               disabled={loading}
-              className="px-5 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+              className="px-5 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {loading ? (
-                <>
-                  <svg
-                    className="w-4 h-4 animate-spin"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    />
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8v8H4z"
-                    />
-                  </svg>
-                  Creating…
-                </>
-              ) : (
-                "Create product"
-              )}
+              {loading ? "Creating…" : "Create product"}
             </button>
           </div>
         </form>
       </div>
-    </div>
-  );
-}
-
-// ── Sub-components ────────────────────────────────────────────────────────────
-
-function inputClass(hasError: boolean) {
-  return [
-    "w-full rounded-lg border px-3 py-2 text-sm text-gray-900 placeholder-gray-400",
-    "focus:outline-none focus:ring-2 focus:ring-offset-0 transition-shadow",
-    hasError
-      ? "border-red-400 focus:ring-red-200"
-      : "border-gray-200 focus:ring-indigo-200 focus:border-indigo-400",
-  ].join(" ");
-}
-
-interface FieldProps {
-  label: string;
-  required?: boolean;
-  hint?: string;
-  error?: string;
-  children: React.ReactNode;
-}
-
-function Field({ label, required, hint, error, children }: FieldProps) {
-  return (
-    <div className="space-y-1">
-      <div className="flex items-baseline justify-between">
-        <label className="block text-sm font-medium text-gray-700">
-          {label}
-          {required && <span className="ml-0.5 text-red-500">*</span>}
-        </label>
-        {hint && !error && (
-          <span className="text-xs text-gray-400">{hint}</span>
-        )}
-      </div>
-      {children}
-      {error && <p className="text-xs text-red-600 mt-1">{error}</p>}
     </div>
   );
 }
