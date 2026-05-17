@@ -22,6 +22,8 @@ const upload = multer({ storage: storage })
 
 router.get('/api/products', getProducts)
 
+
+
 /* const checkAuthentication = (req: Request, res: Response) => {
     console.log(req.headers.authorization);
     let token = req.headers.authorization?.split(" ")[1]

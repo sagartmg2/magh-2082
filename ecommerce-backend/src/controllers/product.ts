@@ -3,26 +3,73 @@
 import { Request, Response } from "express"
 import Product from "../models/Product.js";
 import ProductImage from "../models/ProductImage.js";
+import Category from "../models/Category.js";
+import { Order } from "sequelize";
 
 
 export const getProducts = async (req: Request, res: Response) => {
 
-    // {{domain}}/products?q=mouse&priceFrom=100&priceTo=2000&category&page=1&limit=20
-    console.log(req.query);
-    let limit = 5;
-    let offset = 0;
+    let limit = 15
+    let page = 1
+    let sort = ["createdAt", "DESC"]
 
     if (req.query.limit) {
         limit = parseInt(req.query.limit as string)
     }
 
+    if (req.query.page) {
+        page = parseInt(req.query.page as string)
+    }
 
-    let products = await Product.findAll({
+    if (req.query.sort) {
+        switch (req.query.sort) {
+            case "oldest": {
+                sort = ["createdAt", "ASC"]
+                break;
+            }
+            case "priceAsc": {
+                sort = ["price", "ASC"]
+                break;
+            }
+            case "priceDesc": {
+                sort = ["price", "DESC"]
+                break;
+            }
+            default: {
+                sort = ["createdAt", "DESC"]
+                break
+            }
+        }
+    }
+
+
+    let productsData = await Product.findAndCountAll({
+        include: [
+            {
+                model: Category,
+                as: "category",
+                attributes: ["id", "title", "parentId"]
+            },
+            {
+                model: ProductImage,
+                as: "images",
+                attributes: ["id", "path",]
+
+            }
+        ],
         limit: limit,
-        offset: offset,
+        offset: (page - 1) * limit,
+        // order: [["createdAt", "DESC"]]
+        order: [sort] as Order
     })
+
     res.send({
-        data: products
+        data: {
+            total: productsData.count,
+            limit: limit,
+            page: 1,
+            products: productsData.rows
+        }
     })
 }
 
@@ -46,7 +93,7 @@ export const createProduct = async (req: Request, res: Response) => {
             description,
             stock,
             userId: req.user?.id,
-            categoryId: categoryId || 1
+            categoryId: categoryId
         })
 
         console.log(product);
