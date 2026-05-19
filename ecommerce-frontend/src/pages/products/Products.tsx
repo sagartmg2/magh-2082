@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../redux/store";
 import { Link } from "react-router";
+import axios from "axios";
 
 const products = [
   {
@@ -116,7 +117,7 @@ function ProductCard({ product }) {
       >
         <img
           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-          src={product.img}
+          src={`http://localhost:4000/${product.images[0]?.path}`}
           alt={product.title}
         />
       </div>
@@ -160,6 +161,16 @@ function ProductCard({ product }) {
 }
 
 export default function Products() {
+  const [products, setProducts] = useState([]);
+  // fileter
+
+  useEffect(() => {
+    axios.get("http://localhost:4000/api/products").then((res) => {
+      setProducts(res.data.data.products);
+    });
+
+  }, []);
+
   const reduxUser = useSelector(
     (globalStore: RootState) => globalStore.user.value,
   );
@@ -179,7 +190,10 @@ export default function Products() {
         </p>
       </div>
       {reduxUser?.isSeller && (
-        <Link to="/sellers/products/add" className="border p-4 bg-secondary text-white">
+        <Link
+          to="/sellers/products/add"
+          className="border p-4 bg-secondary text-white"
+        >
           CREATE Product
         </Link>
       )}

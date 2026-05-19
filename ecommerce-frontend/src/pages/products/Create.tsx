@@ -1,24 +1,33 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import type { ChangeEvent, SyntheticEvent } from "react";
+import { useForm } from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
+import { toast } from "react-toastify";
 
-const initialForm = {
-  title: "",
-  price: "",
-  stock: "",
-  description: "",
-  categoryId: null,
+type Inputs = {
+  title: string;
+  price: number;
+  stock: number;
+  description: string;
+  categoryId: number;
+  images: FileList;
 };
 
 export default function CreateProduct() {
-  const [form, setForm] = useState(initialForm);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<Inputs>({
+    defaultValues: { stock: 0 },
+  });
+
   const [categories, setCategories] = useState<{ title: string; id: number }[]>(
     [],
   );
+
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [serverError, setServerError] = useState<string | null>(null);
 
   useEffect(() => {
     axios
@@ -26,75 +35,44 @@ export default function CreateProduct() {
       .then((res) => setCategories(res.data.data));
   }, []);
 
-  function handleChange(
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-  ) {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: "" }));
-  }
-
-  async function handleSubmit(e: SyntheticEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    const errs: Record<string, string> = {};
-    if (!form.title.trim()) errs.title = "Title is required.";
-    const price = parseFloat(form.price);
-    if (!form.price) errs.price = "Price is required.";
-    else if (isNaN(price) || price < 0)
-      errs.price = "Price must be a positive number.";
-    else if (!/^\d+(\.\d{1,2})?$/.test(form.price))
-      errs.price = "Price can have at most 2 decimal places.";
-    const stock = parseInt(form.stock, 10);
-    if (form.stock !== "" && (isNaN(stock) || stock < 0))
-      errs.stock = "Stock must be a non-negative integer.";
-
-    if (Object.keys(errs).length) return setErrors(errs);
-
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    console.log(data);
     setLoading(true);
-    setSuccess(false);
-    setServerError(null);
 
+    // console.log(12);
+    // console.log(data.price);
+    // return;
     try {
-      let images = (
-        e.currentTarget.elements.namedItem("images") as HTMLInputElement
-      ).files;
-
-      console.log(images);
       const formData = new FormData();
-      formData.append("title", form.title.trim());
-      formData.append(
-        "price",
-        String(parseFloat(parseFloat(form.price).toFixed(2))),
-      );
-      formData.append("stock", form.stock !== "" ? String(stock) : "0");
-      formData.append("description", form.description.trim());
-      formData.append("categoryId", form.categoryId);
+      formData.append("title", data.title.trim());
+      formData.append("price", data.price as unknown as string);
+      formData.append("stock", String(data.stock ?? 0));
+      formData.append("description", data.description?.trim() ?? "");
+      formData.append("categoryId", String(data.categoryId));
 
-      for (let i = 0; i < images.length; i++) {
-        formData.append("images", images[i]);
+      if (data.images) {
+        for (let i = 0; i < data.images.length; i++) {
+          formData.append("images", data.images[i]);
+        }
       }
 
       await axios.post("http://localhost:4000/api/products", formData, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 
-      setForm(initialForm);
-      setErrors({});
-      setSuccess(true);
+      toast("product create!");
+      reset();
     } catch (err) {
-      setServerError(
-        err instanceof Error ? err.message : "Something went wrong.",
-      );
+      toast("somethig went wrong..");
+      console.log(err);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  const inputCls = (field: string) =>
+  const inputCls = () =>
     `w-full rounded-lg border px-3 py-2 text-sm text-gray-900 placeholder-gray-400
-     focus:outline-none focus:ring-2 transition-shadow
-     ${errors[field] ? "border-red-400 focus:ring-red-200" : "border-gray-200 focus:ring-indigo-200 focus:border-indigo-400"}`;
+     focus:outline-none focus:ring-2 transition-shadow border-gray-200 focus:ring-indigo-200 focus:border-indigo-400`;
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-start justify-center py-12 px-4">
@@ -107,38 +85,24 @@ export default function CreateProduct() {
         </div>
 
         <form
-          onSubmit={handleSubmit}
-          noValidate
+          onSubmit={handleSubmit(onSubmit)}
           className="bg-white border border-gray-200 rounded-xl shadow-sm divide-y divide-gray-100"
         >
           <div className="px-6 py-5 space-y-5">
-            {success && (
-              <div className="rounded-lg bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm text-emerald-700">
-                Product created successfully.
-              </div>
-            )}
-            {serverError && (
-              <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
-                {serverError}
-              </div>
-            )}
-
             {/* Title */}
             <div className="space-y-1">
               <label className="block text-sm font-medium text-gray-700">
                 Title <span className="text-red-500">*</span>
               </label>
               <input
-                name="title"
+                {...register("title", { required: "Title is required." })}
                 type="text"
-                value={form.title}
-                onChange={handleChange}
                 placeholder="e.g. Wireless Headphones"
                 maxLength={255}
-                className={inputCls("title")}
+                className={inputCls()}
               />
               {errors.title && (
-                <p className="text-xs text-red-600">{errors.title}</p>
+                <p className="text-xs text-red-600">{errors.title.message}</p>
               )}
             </div>
 
@@ -147,11 +111,7 @@ export default function CreateProduct() {
               <label className="block text-sm font-medium text-gray-700">
                 Category
               </label>
-              <select
-                name="categoryId"
-                onChange={handleChange}
-                className={inputCls("category")}
-              >
+              <select {...register("categoryId")} className={inputCls()}>
                 {categories.map((c) => (
                   <option value={c.id} key={c.title}>
                     {c.title}
@@ -171,18 +131,22 @@ export default function CreateProduct() {
                     $
                   </span>
                   <input
-                    name="price"
+                    {...register("price", {
+                      required: "Price is required.",
+                      min: { value: 0, message: "Price must be positive." },
+                      validate: (v) =>
+                        /^\d+(\.\d{1,2})?$/.test(String(v)) ||
+                        "At most 2 decimal places.",
+                    })}
                     type="number"
-                    value={form.price}
-                    onChange={handleChange}
                     placeholder="0.00"
                     min={0}
                     step="0.01"
-                    className={inputCls("price") + " pl-7"}
+                    className={inputCls() + " pl-7"}
                   />
                 </div>
                 {errors.price && (
-                  <p className="text-xs text-red-600">{errors.price}</p>
+                  <p className="text-xs text-red-600">{errors.price.message}</p>
                 )}
               </div>
 
@@ -194,17 +158,17 @@ export default function CreateProduct() {
                   <span className="text-xs text-gray-400">Defaults to 0</span>
                 </div>
                 <input
-                  name="stock"
+                  {...register("stock", {
+                    min: { value: 0, message: "Stock must be non-negative." },
+                  })}
                   type="number"
-                  value={form.stock}
-                  onChange={handleChange}
                   placeholder="0"
                   min={0}
                   step={1}
-                  className={inputCls("stock")}
+                  className={inputCls()}
                 />
                 {errors.stock && (
-                  <p className="text-xs text-red-600">{errors.stock}</p>
+                  <p className="text-xs text-red-600">{errors.stock.message}</p>
                 )}
               </div>
             </div>
@@ -218,30 +182,27 @@ export default function CreateProduct() {
                 <span className="text-xs text-gray-400">Optional</span>
               </div>
               <textarea
-                name="description"
-                value={form.description}
-                onChange={handleChange}
+                {...register("description")}
                 placeholder="Describe your product…"
                 rows={3}
-                className={inputCls("description") + " resize-none"}
+                className={inputCls() + " resize-none"}
               />
             </div>
           </div>
 
           {/* Images */}
           <div className="px-6 py-4">
-            <input name="images" type="file" multiple />
+            <input {...register("images")} type="file" multiple />
           </div>
+
+          {/* Success / Error feedback */}
 
           {/* Footer */}
           <div className="px-6 py-4 bg-gray-50 rounded-b-xl flex items-center justify-end gap-3">
             <button
               type="button"
               onClick={() => {
-                setForm(initialForm);
-                setErrors({});
-                setSuccess(false);
-                setServerError(null);
+                reset();
               }}
               className="px-4 py-2 text-sm text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
             >

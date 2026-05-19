@@ -4,7 +4,7 @@ import { Request, Response } from "express"
 import Product from "../models/Product.js";
 import ProductImage from "../models/ProductImage.js";
 import Category from "../models/Category.js";
-import { Order } from "sequelize";
+import { Op, Order } from "sequelize";
 
 
 export const getProducts = async (req: Request, res: Response) => {
@@ -12,6 +12,30 @@ export const getProducts = async (req: Request, res: Response) => {
     let limit = 15
     let page = 1
     let sort = ["createdAt", "DESC"]
+    let searchText = ""
+
+    let categoryIds: string[] = []
+    if (req.query.categoryIds) {
+        categoryIds = (req.query.categoryIds as string).split(",")
+    }
+
+    console.log({ categoryIds });
+
+    let whereCategoryCondition = {}
+
+    if (categoryIds.length > 0) {
+
+        whereCategoryCondition = {
+            id: {
+                [Op.in]: categoryIds
+            }
+        }
+    }
+
+
+    if (req.query.q) {
+        searchText = req.query.q as string
+    }
 
     if (req.query.limit) {
         limit = parseInt(req.query.limit as string)
@@ -44,11 +68,18 @@ export const getProducts = async (req: Request, res: Response) => {
 
 
     let productsData = await Product.findAndCountAll({
+        where: {
+            // title:"mouse",
+            title: {
+                [Op.like]: searchText ? `%${searchText}%` : "%%"
+            }
+        },
         include: [
             {
                 model: Category,
                 as: "category",
-                attributes: ["id", "title", "parentId"]
+                attributes: ["id", "title", "parentId"],
+                where: whereCategoryCondition
             },
             {
                 model: ProductImage,
@@ -77,6 +108,7 @@ export const getProducts = async (req: Request, res: Response) => {
 export const createProduct = async (req: Request, res: Response) => {
     console.log("req.user", req.user);
     console.log("req.files/images", req.files);
+
 
     try {
         const {

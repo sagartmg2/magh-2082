@@ -19,6 +19,7 @@ const port = 4000
 // let user:UserType = {}
 
 
+app.use("/uploads", express.static('uploads'));
 app.use(cors())   // global middleware           // cors()  return () =>{ }
 app.use(express.json()) // global middeware      // return () =>{}
 
