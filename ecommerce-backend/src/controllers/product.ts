@@ -26,9 +26,18 @@ export const getProducts = async (req: Request, res: Response) => {
     if (categoryIds.length > 0) {
 
         whereCategoryCondition = {
-            id: {
-                [Op.in]: categoryIds
-            }
+            [Op.or]: [
+                {
+                    id: {
+                        [Op.in]: categoryIds
+                    }
+                },
+                {
+                    parentId: {
+                        [Op.in]: categoryIds
+                    }
+                },
+            ]
         }
     }
 
@@ -71,7 +80,7 @@ export const getProducts = async (req: Request, res: Response) => {
         where: {
             // title:"mouse",
             title: {
-                [Op.like]: searchText ? `%${searchText}%` : "%%"
+                [Op.iLike]: searchText ? `%${searchText}%` : "%%"
             }
         },
         include: [

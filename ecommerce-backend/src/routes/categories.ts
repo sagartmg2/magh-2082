@@ -7,7 +7,15 @@ import Category from "../models/Category.js"
 import checkIsAdmin from "../middlewares/checkIsAdmin.js"
 
 router.get('/api/categories', async (req, res) => {
-    let data = await Category.findAll();
+    let data = await Category.findAll({
+        where: {
+            parentId: null
+        },
+        include: {
+            model: Category,
+            as: "subCategories"
+        }
+    });
     res.send({
         data: data
     })

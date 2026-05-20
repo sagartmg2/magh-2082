@@ -4,78 +4,6 @@ import type { RootState } from "../../redux/store";
 import { Link } from "react-router";
 import axios from "axios";
 
-const products = [
-  {
-    id: 1,
-    title: "Dictum morbi",
-    oldPrice: "$106.00",
-    newPrice: "$111.00",
-    stars: "★★★★☆",
-    img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80",
-    desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Magna is est adipiscing in phasellus non in justo.",
-  },
-  {
-    id: 2,
-    title: "Sodales sit",
-    oldPrice: "$106.00",
-    newPrice: "$115.00",
-    stars: "★★★★★",
-    img: "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=400&q=80",
-    desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Magna is est adipiscing in phasellus non in justo.",
-  },
-  {
-    id: 3,
-    title: "Nibh varius",
-    oldPrice: "$116.00",
-    newPrice: "$159.00",
-    stars: "★★★★★",
-    img: "https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400&q=80",
-    desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Magna is est adipiscing in phasellus non in justo.",
-  },
-  {
-    id: 4,
-    title: "Mauris quis",
-    oldPrice: "$96.00",
-    newPrice: "$105.00",
-    stars: "★★★★☆",
-    img: "https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=400&q=80",
-    desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Magna is est adipiscing in phasellus non in justo.",
-  },
-  {
-    id: 5,
-    title: "Morbi sagittis",
-    oldPrice: "$136.00",
-    newPrice: "$125.00",
-    stars: "★★★★★",
-    img: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&q=80",
-    desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Magna is est adipiscing in phasellus non in justo.",
-  },
-  {
-    id: 6,
-    title: "Ultrices venenatis",
-    oldPrice: "$156.00",
-    newPrice: "$138.00",
-    stars: "★★★★☆",
-    img: "https://images.unsplash.com/photo-1619451334792-150fd785ee74?w=400&q=80",
-    desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Magna is est adipiscing in phasellus non in justo.",
-  },
-];
-
-const categories = [
-  "Prestashop",
-  "Magento",
-  "Bigcommerce",
-  "osCommerce",
-  "Jotun",
-];
-const subCategories = ["Accessories", "Jewellery", "Watches"];
-const priceRanges = [
-  "$20.00 – $150.00",
-  "$150.00 – $350.00",
-  "$350.00 – $504.00",
-  "$400.00 +",
-];
-
 const accentGold = "#C8A96E";
 const serifFont = { fontFamily: "'Cormorant Garamond', serif" };
 
@@ -87,24 +15,6 @@ function SectionTitle({ children }) {
     >
       {children}
     </span>
-  );
-}
-
-function CheckboxItem({ label, defaultChecked = false, indent = false }) {
-  const [checked, setChecked] = useState(defaultChecked);
-  return (
-    <label
-      className={`flex items-center gap-2 text-xs text-gray-500 py-1 cursor-pointer hover:text-gray-800 ${indent ? "pl-5" : ""}`}
-    >
-      <input
-        type="checkbox"
-        className="rounded"
-        checked={checked}
-        onChange={() => setChecked(!checked)}
-        style={{ accentColor: accentGold }}
-      />
-      {label}
-    </label>
   );
 }
 
@@ -162,14 +72,49 @@ function ProductCard({ product }) {
 
 export default function Products() {
   const [products, setProducts] = useState([]);
-  // fileter
+  const [categories, setCategories] = useState([]);
+
+  const [filter, setFilters] = useState({
+    limit: 5,
+    sort: "oldest",
+    categoryIds: [],
+  });
 
   useEffect(() => {
-    axios.get("http://localhost:4000/api/products").then((res) => {
-      setProducts(res.data.data.products);
-    });
+    getProducts();
+  }, [filter]);
 
+  useEffect(() => {
+    axios.get("http://localhost:4000/api/categories").then((res) => {
+      setCategories(res.data.data);
+    });
   }, []);
+
+  function getProducts() {
+    axios
+      .get(
+        `http://localhost:4000/api/products?q=&categoryIds=${filter.categoryIds.join()}&limit=${filter.limit}&sort=${filter.sort}`,
+      )
+      .then((res) => {
+        setProducts(res.data.data.products);
+      });
+  }
+
+  const changeCategory = (e, cat) => {
+    setFilters((prev) => {
+      let newCategoryIds = [...prev.categoryIds];
+      if (e.target.checked) {
+        newCategoryIds.push(cat.id);
+      } else {
+        newCategoryIds = newCategoryIds.filter((el) => el != cat.id);
+      }
+
+      return {
+        ...prev,
+        categoryIds: newCategoryIds,
+      };
+    });
+  };
 
   const reduxUser = useSelector(
     (globalStore: RootState) => globalStore.user.value,
@@ -207,26 +152,43 @@ export default function Products() {
             <SectionTitle>Categories</SectionTitle>
             <div className="flex flex-col mt-1">
               {categories.map((cat) => (
-                <CheckboxItem key={cat} label={cat} />
+                <>
+                  <div className={`flex gap-2 ${cat.parentId ? "pl-8" : ""}`}>
+                    <input
+                      id={`cat-${cat.id}`}
+                      type="checkbox"
+                      className="rounded"
+                      onChange={(e) => {
+                        changeCategory(e, cat);
+                      }}
+                    />
+                    <label htmlFor={`cat-${cat.id}`}>{cat.title}</label>
+                  </div>
+
+                  {cat.subCategories.map((sub) => {
+                    return (
+                      <div
+                        className={`flex gap-2 ${sub.parentId ? "pl-8" : ""}`}
+                      >
+                        <input
+                          id={`cat-${sub.id}`}
+                          type="checkbox"
+                          className="rounded"
+                          onChange={(e) => {
+                            changeCategory(e, sub);
+                          }}
+                        />
+                        <label htmlFor={`cat-${sub.id}`}>{sub.title}</label>
+                      </div>
+                    );
+                  })}
+                </>
               ))}
+              {/*
               <CheckboxItem label="Bags" />
               {subCategories.map((cat) => (
                 <CheckboxItem key={cat} label={cat} indent />
-              ))}
-            </div>
-          </div>
-
-          {/* Price Filter */}
-          <div>
-            <SectionTitle>Price Filter</SectionTitle>
-            <div className="flex flex-col mt-1">
-              {priceRanges.map((range) => (
-                <CheckboxItem
-                  key={range}
-                  label={range}
-                  defaultChecked={range === "$350.00 – $504.00"}
-                />
-              ))}
+              ))} */}
             </div>
           </div>
         </aside>
@@ -238,9 +200,9 @@ export default function Products() {
             <div className="flex items-center gap-3">
               <span className="text-xs text-gray-400">Per Page:</span>
               <select className="text-xs border border-gray-200 bg-white text-gray-800 px-2 py-1 rounded-sm outline-none cursor-pointer">
-                <option>12</option>
-                <option>24</option>
-                <option>48</option>
+                <option>5</option>
+                <option>10</option>
+                <option>15</option>
               </select>
               <span className="text-xs text-gray-400 ml-2">Sort By:</span>
               <select className="text-xs border border-gray-200 bg-white text-gray-800 px-2 py-1 rounded-sm outline-none cursor-pointer">
