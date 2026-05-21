@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../redux/store";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import axios from "axios";
 
 const accentGold = "#C8A96E";
@@ -73,32 +73,34 @@ function ProductCard({ product }) {
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [searchParams, setSearchParms] = useSearchParams();
+
+  console.log("product page", searchParams.get("q"));
 
   const [filter, setFilters] = useState({
-    limit: 5,
+    limit: searchParams.get("limit") || 15,
     sort: "oldest",
     categoryIds: [],
   });
 
   useEffect(() => {
-    getProducts();
-  }, [filter]);
+    let searchText = searchParams.get("q") || "";
+    let limit = searchParams.get("limit") || 15;
+
+    axios
+      .get(
+        `http://localhost:4000/api/products?q=${searchText}&categoryIds=${filter.categoryIds.join()}&limit=${limit}&sort=${filter.sort}`,
+      )
+      .then((res) => {
+        setProducts(res.data.data.products);
+      });
+  }, [filter, searchParams]);
 
   useEffect(() => {
     axios.get("http://localhost:4000/api/categories").then((res) => {
       setCategories(res.data.data);
     });
   }, []);
-
-  function getProducts() {
-    axios
-      .get(
-        `http://localhost:4000/api/products?q=&categoryIds=${filter.categoryIds.join()}&limit=${filter.limit}&sort=${filter.sort}`,
-      )
-      .then((res) => {
-        setProducts(res.data.data.products);
-      });
-  }
 
   const changeCategory = (e, cat) => {
     setFilters((prev) => {
@@ -119,6 +121,19 @@ export default function Products() {
   const reduxUser = useSelector(
     (globalStore: RootState) => globalStore.user.value,
   );
+
+  const changePerPage = (e) => {
+
+    setFilters((prev) => {
+      return { ...prev, limit: e.target.value };
+    });
+
+    setSearchParms((prev) => {
+      const newParms = new URLSearchParams(prev);
+      newParms.set("limit", e.target.value);
+      return newParms;
+    });
+  };
 
   return (
     <div className="min-h-screen container">
@@ -199,10 +214,15 @@ export default function Products() {
           <div className="flex items-center justify-between pb-4 mb-5 border-b border-gray-200">
             <div className="flex items-center gap-3">
               <span className="text-xs text-gray-400">Per Page:</span>
-              <select className="text-xs border border-gray-200 bg-white text-gray-800 px-2 py-1 rounded-sm outline-none cursor-pointer">
-                <option>5</option>
-                <option>10</option>
-                <option>15</option>
+              <select
+                onChange={changePerPage}
+                value={filter.limit}
+                className="text-xs border border-gray-200 bg-white text-gray-800 px-2 py-1 rounded-sm outline-none cursor-pointer"
+              >
+                <option value="2">2</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
               </select>
               <span className="text-xs text-gray-400 ml-2">Sort By:</span>
               <select className="text-xs border border-gray-200 bg-white text-gray-800 px-2 py-1 rounded-sm outline-none cursor-pointer">

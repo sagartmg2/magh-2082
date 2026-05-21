@@ -9,7 +9,13 @@ import {
   User,
   X,
 } from "lucide-react";
-import { Link, useLocation } from "react-router";
+import {
+  Link,
+  Navigate,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../../redux/store";
 import { logout } from "../../redux/features/userSlice";
@@ -22,6 +28,28 @@ export default function Header() {
   const [menuOpened, setMenuOpened] = useState(false);
   const location = useLocation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [searchParams, setSearchParms] = useSearchParams();
+
+  console.log("query q:", searchParams.get("q"));
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    e.target.searchText;
+
+    // setCount((prev) =>{return prev + 1})
+
+    setSearchParms((prev) => {
+      const newParms = new URLSearchParams(prev);
+      newParms.set("q", e.target.searchText.value);
+      return newParms;
+    });
+
+    if (location.pathname !== "/products") {
+      navigate("/products?q=" + e.target.searchText.value);
+    }
+  }
 
   console.log("HEADER-RENDER");
 
@@ -89,10 +117,16 @@ export default function Header() {
             )}
           </ul>
         </div>
-        <div className=" flex gap-0.5">
-          <input className="border " />
-          <Search />
-        </div>
+        <form onSubmit={handleSubmit} className=" flex gap-0.5">
+          <input
+            defaultValue={searchParams.get("q") || ""}
+            className="border "
+            name="searchText"
+          />
+          <button>
+            <Search />
+          </button>
+        </form>
         <Menu
           className="lg:hidden"
           onClick={() => {
