@@ -1,6 +1,8 @@
 import Category from "./Category.js"
 import Product from "./Product.js"
 import ProductImage from "./ProductImage.js"
+import Cart from "./Cart.js"
+
 
 Product.hasMany(ProductImage, {
     foreignKey: "productId",

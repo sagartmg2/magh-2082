@@ -3,6 +3,8 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../../redux/store";
 import { Link, useSearchParams } from "react-router";
 import axios from "axios";
+import { ShoppingCart } from "lucide-react";
+import { toast } from "react-toastify";
 
 const accentGold = "#C8A96E";
 const serifFont = { fontFamily: "'Cormorant Garamond', serif" };
@@ -19,6 +21,17 @@ function SectionTitle({ children }) {
 }
 
 function ProductCard({ product }) {
+  const reduxUser = useSelector(
+    (globalStore: RootState) => globalStore.user.value,
+  );
+
+  const addToCart = () => {
+    if (reduxUser) {
+    } else {
+      toast.error("login required.");
+    }
+  };
+
   return (
     <div className="flex bg-white border border-gray-100 rounded-sm overflow-hidden hover:shadow-lg transition-shadow duration-300">
       <div
@@ -56,14 +69,13 @@ function ProductCard({ product }) {
           {product.desc}
         </p>
         <div className="flex gap-2">
-          {["🛒", "♡", "⊕"].map((icon) => (
-            <button
-              key={icon}
-              className="w-8 h-8 flex items-center justify-center border border-gray-200 rounded-full text-gray-400 text-xs cursor-pointer bg-transparent hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-colors duration-200"
-            >
-              {icon}
-            </button>
-          ))}
+          <button
+            type="button"
+            onClick={addToCart}
+            className=" flex items-center justify-center border border-gray-200 rounded-full text-xs cursor-pointer bg-secondary text-white px-3  py-2  hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-colors duration-200"
+          >
+            add to cart <ShoppingCart />
+          </button>
         </div>
       </div>
     </div>
@@ -123,7 +135,6 @@ export default function Products() {
   );
 
   const changePerPage = (e) => {
-
     setFilters((prev) => {
       return { ...prev, limit: e.target.value };
     });

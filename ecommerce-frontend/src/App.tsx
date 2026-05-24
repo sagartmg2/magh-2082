@@ -18,6 +18,7 @@ import Forbidden from "./pages/Forbidden";
 import AdminRootLayout from "./components/layout/admin/AdminRootLayout";
 import Categories from "./pages/admin/Categories";
 import Dashboard from "./pages/admin/Dashboard";
+import Cart from "./pages/Cart";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -86,7 +87,10 @@ function App() {
         {
           path: "",
           Component: ProtectedRoute,
-          children: [{ path: "/orders", Component: Orders }],
+          children: [
+            { path: "/orders", Component: Orders },
+            { path: "/carts", Component: Cart }
+          ],
         },
         {
           path: "",

@@ -111,9 +111,14 @@ export default function Header() {
               <Link to="/products">products </Link>
             </li>
             {reduxUser && (
-              <li>
-                <Link to="/orders">orders </Link>
-              </li>
+              <>
+                <li>
+                  <Link to="/orders">orders </Link>
+                </li>
+                <li>
+                  <Link to="/carts">Carts </Link>
+                </li>
+              </>
             )}
           </ul>
         </div>
