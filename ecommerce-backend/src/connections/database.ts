@@ -24,7 +24,7 @@ const checkDbConnection = async () => {
         console.error("Unable to connect to the database:", error);
     }
 };
-
+    
 checkDbConnection();
 
 export default sequelize

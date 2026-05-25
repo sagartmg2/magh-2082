@@ -18,3 +18,13 @@ Category.hasMany(Product, {
     foreignKey: "categoryId",
     as: "products"
 })
+
+Cart.belongsTo(Product, {
+    foreignKey: "productId",
+    as: "product"
+})
+
+Product.hasMany(Cart, {
+    foreignKey: "productId",
+    as: "carts"
+})

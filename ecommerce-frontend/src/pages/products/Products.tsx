@@ -25,8 +25,19 @@ function ProductCard({ product }) {
     (globalStore: RootState) => globalStore.user.value,
   );
 
-  const addToCart = () => {
+  const addToCart = (product) => {
     if (reduxUser) {
+      axios.post(
+        "http://localhost:4000/api/carts",
+        {
+          productId: product.id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
     } else {
       toast.error("login required.");
     }
@@ -71,7 +82,9 @@ function ProductCard({ product }) {
         <div className="flex gap-2">
           <button
             type="button"
-            onClick={addToCart}
+            onClick={() => {
+              addToCart(product);
+            }}
             className=" flex items-center justify-center border border-gray-200 rounded-full text-xs cursor-pointer bg-secondary text-white px-3  py-2  hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-colors duration-200"
           >
             add to cart <ShoppingCart />
