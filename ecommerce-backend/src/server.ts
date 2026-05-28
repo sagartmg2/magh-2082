@@ -3,10 +3,12 @@ import authRoute from "./routes/auth.js"
 import productRoute from "./routes/product.js"
 import categoryRoute from "./routes/category.js"
 import cartRoute from "./routes/cart.js"
+import orderRoute from "./routes/order.js"
 import cors from "cors"
 import path from "path"
 import "./models/index.js"
 import "./connections/database.js"
+import checkAuthentication from "./middlewares/checkAuthentication.js"
 // import { User as UserType } from "./types/User.js"
 
 
@@ -43,7 +45,7 @@ app.use(productRoute);
 app.use(categoryRoute);
 app.use(cartRoute);
 
-// app.use(checkAuthentication,orderRoute);
+app.use("/api/orders", checkAuthentication, orderRoute);
 
 
 app.get('/', (req, res) => {

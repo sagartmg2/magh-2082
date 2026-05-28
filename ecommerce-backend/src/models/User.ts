@@ -31,6 +31,11 @@ const User = sequelize.define(
       allowNull: false,
       defaultValue: false,
     },
+    shippingCharge: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      defaultValue: 0,
+    },
     isAdmin: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

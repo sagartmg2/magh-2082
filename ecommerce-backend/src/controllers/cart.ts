@@ -3,6 +3,7 @@ import express, { Request, Response } from "express"
 import Cart from "../models/Cart.js"
 import Product from "../models/Product.js"
 import ProductImage from "../models/ProductImage.js"
+import User from "../models/User.js"
 
 export const fetchCarts = async (req: Request, res: Response) => {
     let data = await Cart.findAll({
@@ -14,11 +15,19 @@ export const fetchCarts = async (req: Request, res: Response) => {
                 model: Product,
                 as: "product",
                 required: true,
-                include: [{
-                    model: ProductImage,
-                    as: "images",
-                    required: false
-                }]
+                include: [
+                    {
+                        model: ProductImage,
+                        as: "images",
+                        required: false
+                    },
+                    {
+                        model: User,
+                        as: "user",
+                        required: true,
+                        attributes: ["id", "firstName", "email", "shipping_charge"]
+                    }
+                ]
             },
 
         ]

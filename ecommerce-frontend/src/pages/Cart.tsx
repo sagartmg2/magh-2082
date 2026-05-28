@@ -37,9 +37,14 @@ interface CartItem {
 function Cart() {
   const [carts, setCarts] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [country, setCountry] = useState("");
+
+  // Order form state
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [city, setCity] = useState("");
-  const [postalCode, setPostalCode] = useState("");
+  const [address, setAddress] = useState("");
+  const [note, setNote] = useState("");
+  const [payment, setPayment] = useState<"cash" | "esewa">("cash");
 
   useEffect(() => {
     axios
@@ -55,21 +60,16 @@ function Cart() {
       .finally(() => setLoading(false));
   }, []);
 
-  const updateQty = (productId, quantity, id: number, delta: number) => {
-
+  const updateQty = (productId: number, quantity: number, id: number, delta: number) => {
     axios.post(
-      "http://localhost:4000/api/carts",
-      {
-        productId: productId,
-        quantity: quantity + delta,
-      },
+      `${BASE_URL}/api/carts`,
+      { productId, quantity: quantity + delta },
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       },
     );
-
     setCarts((prev) =>
       prev.map((item) =>
         item.id === id
@@ -95,9 +95,19 @@ function Cart() {
     return null;
   };
 
+  const handlePlaceOrder = () => {
+    if (!name || !phone || !city || !address) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+    // TODO: call your order API here
+    console.log({ name, phone, city, address, note, payment, carts, subtotal });
+  };
+
   return (
     <div className="min-h-screen bg-[#f8f9fc] px-6 py-10 text-[#1a1f36]">
       <div className="mx-auto max-w-[1200px] grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
+
         {/* ── Left: Product Table ── */}
         <div>
           {/* Table Header */}
@@ -121,8 +131,7 @@ function Cart() {
             <div className="flex flex-col">
               {carts.map((item) => {
                 const imgUrl = getImageUrl(item);
-                const lineTotal =
-                  parseFloat(item.product.price) * item.quantity;
+                const lineTotal = parseFloat(item.product.price) * item.quantity;
                 return (
                   <div
                     key={item.id}
@@ -130,7 +139,6 @@ function Cart() {
                   >
                     {/* Product Cell */}
                     <div className="flex items-center gap-3.5 relative">
-                      {/* Remove Button */}
                       <button
                         onClick={() => removeItem(item.id)}
                         title="Remove"
@@ -139,7 +147,6 @@ function Cart() {
                         ✕
                       </button>
 
-                      {/* Image */}
                       <div className="relative w-[74px] h-[74px] rounded-xl overflow-hidden shrink-0 bg-[#e9ecf5]">
                         {imgUrl ? (
                           <img
@@ -148,19 +155,19 @@ function Cart() {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-content-center text-[28px] text-[#b0b8d4]">
+                          <div className="w-full h-full flex items-center justify-center text-[28px] text-[#b0b8d4]">
                             🛍️
                           </div>
                         )}
                       </div>
 
-                      {/* Info */}
                       <div>
                         <p className="font-semibold text-sm text-[#1a1f36] mb-1">
                           {item.product.title}
                         </p>
                         <p className="text-xs text-[#8892b0] leading-relaxed">
-                          {item.product.description}
+                          {item.product.description}<br/>
+                          {item.product.stock} items in stock
                         </p>
                       </div>
                     </div>
@@ -174,14 +181,7 @@ function Cart() {
                     <div className="flex justify-center">
                       <div className="flex items-center border border-[#dde1f0] rounded-lg overflow-hidden bg-white">
                         <button
-                          onClick={() =>
-                            updateQty(
-                              item.product.id,
-                              item.quantity,
-                              item.id,
-                              -1,
-                            )
-                          }
+                          onClick={() => updateQty(item.product.id, item.quantity, item.id, -1)}
                           className="w-[30px] h-[30px] flex items-center justify-center text-base text-[#5a6488] hover:bg-[#f0f2fb] hover:text-[#1a2e6f] transition-colors duration-150 cursor-pointer"
                         >
                           −
@@ -190,9 +190,7 @@ function Cart() {
                           {item.quantity}
                         </span>
                         <button
-                          onClick={() =>
-                            updateQty(item.product.id, item.quantity, item.id, 1)
-                          }
+                          onClick={() => updateQty(item.product.id, item.quantity, item.id, 1)}
                           className="w-[30px] h-[30px] flex items-center justify-center text-base text-[#5a6488] hover:bg-[#f0f2fb] hover:text-[#1a2e6f] transition-colors duration-150 cursor-pointer"
                         >
                           +
@@ -224,71 +222,156 @@ function Cart() {
           </div>
         </div>
 
-        {/* ── Right: Panels ── */}
-        <div className="flex flex-col gap-7">
-          {/* Cart Totals */}
-          <div className="bg-[#eef0f8] rounded-2xl p-7">
-            <h2 className="text-[18px] font-bold text-[#1a2e6f] text-center mb-6 tracking-wide">
-              Cart Totals
-            </h2>
+        {/* ── Right: Order Panel ── */}
+        <div className="bg-[#eef0f8] rounded-2xl p-7 flex flex-col gap-0">
 
-            <div className="flex justify-between items-center py-3 border-b border-[#d8dced] text-[15px]">
-              <span className="font-medium text-[#1a1f36]">Subtotals:</span>
-              <span className="font-bold text-[#1a1f36]">
-                ${subtotal.toFixed(2)}
-              </span>
-            </div>
-            <div className="flex justify-between items-center py-3 text-[15px]">
-              <span className="font-medium text-[#1a1f36]">Totals:</span>
-              <span className="font-bold text-[#1a1f36]">
-                ${subtotal.toFixed(2)}
-              </span>
-            </div>
+          {/* Order Summary */}
+          <h2 className="text-[18px] font-bold text-[#1a2e6f] text-center mb-6 tracking-wide">
+            Order Summary
+          </h2>
 
-            <div className="flex items-center gap-1.5 text-xs text-green-500 mt-3.5 mb-5">
-              <span className="w-2 h-2 rounded-full bg-green-500 shrink-0" />
-              Shipping &amp; taxes calculated at checkout
-            </div>
-
-            <button className="w-full bg-green-500 text-white font-bold text-[15px] py-4 rounded-xl tracking-wide transition-all duration-150 hover:opacity-90 hover:-translate-y-px cursor-pointer">
-              Proceed To Checkout
-            </button>
+          <div className="flex justify-between items-center py-3 border-b border-[#d8dced] text-[15px]">
+            <span className="font-medium text-[#1a1f36]">Subtotal:</span>
+            <span className="font-bold text-[#1a1f36]">${subtotal.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between items-center py-3 text-[15px]">
+            <span className="font-medium text-[#1a1f36]">Total:</span>
+            <span className="font-bold text-[#1a1f36]">${subtotal.toFixed(2)}</span>
           </div>
 
-          {/* Calculate Shipping */}
-          <div className="bg-[#eef0f8] rounded-2xl p-7">
-            <h2 className="text-[18px] font-bold text-[#1a2e6f] text-center mb-6 tracking-wide">
-              Calculate Shopping
-            </h2>
+          <div className="flex items-center gap-1.5 text-xs text-green-500 mt-3">
+            <span className="w-2 h-2 rounded-full bg-green-500 shrink-0" />
+            Shipping &amp; taxes calculated at checkout
+          </div>
 
-            <div className="flex flex-col gap-3.5">
+          <hr className="border-t border-[#d8dced] my-5" />
+
+          {/* Delivery Details */}
+          <h2 className="text-[18px] font-bold text-[#1a2e6f] text-center mb-5 tracking-wide">
+            Delivery Details
+          </h2>
+
+          <div className="flex flex-col gap-4">
+            {/* Full Name */}
+            <div>
+              <p className="text-[11px] font-semibold text-[#7b82a8] uppercase tracking-widest mb-1">
+                Full Name <span className="text-[#ff2d6b]">*</span>
+              </p>
               <input
                 type="text"
-                placeholder="Country"
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
+                placeholder="e.g. Ram Bahadur Thapa"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="bg-transparent border-0 border-b border-[#c8cce0] pb-2.5 pt-2 px-1 text-sm text-[#1a1f36] placeholder-[#b0b8d0] outline-none focus:border-[#1a2e6f] transition-colors duration-150 w-full"
               />
+            </div>
+
+            {/* Phone */}
+            <div>
+              <p className="text-[11px] font-semibold text-[#7b82a8] uppercase tracking-widest mb-1">
+                Phone Number <span className="text-[#ff2d6b]">*</span>
+              </p>
+              <input
+                type="tel"
+                placeholder="+977 98XXXXXXXX"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="bg-transparent border-0 border-b border-[#c8cce0] pb-2.5 pt-2 px-1 text-sm text-[#1a1f36] placeholder-[#b0b8d0] outline-none focus:border-[#1a2e6f] transition-colors duration-150 w-full"
+              />
+            </div>
+
+            {/* City */}
+            <div>
+              <p className="text-[11px] font-semibold text-[#7b82a8] uppercase tracking-widest mb-1">
+                City / District <span className="text-[#ff2d6b]">*</span>
+              </p>
               <input
                 type="text"
-                placeholder="City / District"
+                placeholder="e.g. Kathmandu"
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 className="bg-transparent border-0 border-b border-[#c8cce0] pb-2.5 pt-2 px-1 text-sm text-[#1a1f36] placeholder-[#b0b8d0] outline-none focus:border-[#1a2e6f] transition-colors duration-150 w-full"
               />
+            </div>
+
+            {/* Address */}
+            <div>
+              <p className="text-[11px] font-semibold text-[#7b82a8] uppercase tracking-widest mb-1">
+                Delivery Address <span className="text-[#ff2d6b]">*</span>
+              </p>
+              <textarea
+                placeholder="Street, area, landmark…"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                rows={3}
+                className="bg-transparent border border-[#c8cce0] rounded-lg px-2 py-2.5 text-sm text-[#1a1f36] placeholder-[#b0b8d0] outline-none focus:border-[#1a2e6f] transition-colors duration-150 w-full resize-none"
+              />
+            </div>
+
+            {/* Note */}
+            <div>
+              <p className="text-[11px] font-semibold text-[#7b82a8] uppercase tracking-widest mb-1">
+                Order Note
+              </p>
               <input
                 type="text"
-                placeholder="Postal Code"
-                value={postalCode}
-                onChange={(e) => setPostalCode(e.target.value)}
+                placeholder="Any special instructions?"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
                 className="bg-transparent border-0 border-b border-[#c8cce0] pb-2.5 pt-2 px-1 text-sm text-[#1a1f36] placeholder-[#b0b8d0] outline-none focus:border-[#1a2e6f] transition-colors duration-150 w-full"
               />
-              <button className="mt-1.5 bg-[#ff2d6b] text-white font-bold text-sm py-3.5 rounded-xl tracking-wide transition-all duration-150 hover:opacity-90 hover:-translate-y-px cursor-pointer">
-                Calculate Shipping
-              </button>
             </div>
           </div>
+
+          <hr className="border-t border-[#d8dced] my-5" />
+
+          {/* Payment Method */}
+          <p className="text-sm font-bold text-[#1a2e6f] mb-3">Payment Method</p>
+          <div className="flex gap-3">
+            {(["cash", "esewa"] as const).map((method) => (
+              <label
+                key={method}
+                onClick={() => setPayment(method)}
+                className={`flex-1 flex items-center gap-2.5 border-[1.5px] rounded-xl p-3 cursor-pointer transition-all duration-150 ${
+                  payment === method
+                    ? "border-[#1a2e6f] bg-[#e8ecf8]"
+                    : "border-[#d8dced] bg-white"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="payment"
+                  value={method}
+                  checked={payment === method}
+                  onChange={() => setPayment(method)}
+                  className="accent-[#1a2e6f] w-4 h-4 shrink-0"
+                />
+                <div>
+                  <p className="text-sm font-bold text-[#1a2e6f]">
+                    {method === "cash" ? (
+                      "💵 Cash"
+                    ) : (
+                      <span>
+                        <span className="text-green-500">e</span>Sewa
+                      </span>
+                    )}
+                  </p>
+                  <p className="text-[11px] text-[#7b82a8]">
+                    {method === "cash" ? "Pay on delivery" : "Digital wallet"}
+                  </p>
+                </div>
+              </label>
+            ))}
+          </div>
+
+          <button
+            onClick={handlePlaceOrder}
+            className="w-full mt-5 bg-green-500 text-white font-bold text-[15px] py-4 rounded-xl tracking-wide transition-all duration-150 hover:opacity-90 hover:-translate-y-px cursor-pointer"
+          >
+            Place Order
+          </button>
         </div>
+
       </div>
     </div>
   );
