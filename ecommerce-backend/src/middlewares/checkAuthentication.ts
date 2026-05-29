@@ -12,7 +12,6 @@ const checkAuthentication = (req: Request, res: Response, next: NextFunction) =>
         try {
             let decoded = jwt.verify(token, 'shhhhh') as User;
             req.user = decoded;
-            console.log(decoded);
             next()
 
         } catch (err) {
