@@ -12,6 +12,8 @@ import checkAuthentication from "./middlewares/checkAuthentication.js"
 // import { User as UserType } from "./types/User.js"
 
 
+// const mod = http;
+// const crypto = require('crypto');
 
 // console.log(path.join("/upload", "/products"));
 

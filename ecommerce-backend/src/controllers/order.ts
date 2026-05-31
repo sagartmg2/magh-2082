@@ -1,5 +1,6 @@
 
 import express, { Request, Response } from "express"
+import crypto from "crypto"
 import Order from "../models/Order.js";
 import Product from "../models/Product.js";
 import { Op } from "sequelize";
@@ -70,6 +71,8 @@ export const createOrder = async (req: Request, res: Response) => {
     //     await SubOrder.create({})
     // })
 
+    let totalAmount = 0;
+
     for (let user of data) {
 
         let subTotal = 0
@@ -81,6 +84,8 @@ export const createOrder = async (req: Request, res: Response) => {
             let quantity = req.body.products.find(reqProduct => reqProduct.productId == el.id).quantity
             subTotal += parseFloat(el.price) * quantity
         })
+
+        totalAmount += subTotal
 
 
         const randomNumber = Date.now() + '-' + Math.round(Math.random() * 1E9)
@@ -105,58 +110,36 @@ export const createOrder = async (req: Request, res: Response) => {
         }
     }
 
+    let uuid = Date.now() + 423423;
 
-    // data = data.map(el => el.toJSON());
+    let message = `total_amount=${totalAmount},transaction_uuid=${uuid},product_code=EPAYTEST`;
 
+    const hash = crypto.createHmac('sha256', '8gBm/:&EnhH.1/q')
+        .update(message)
+        .digest('base64');
 
-    // await SubOrder.create({
-    //     orderId: order.getDataValue("id"),
-    //     sellerId: 27,
-    //     deliveryCharge: 0,
-    //     reference: "ORD-234"
-    // })
-
-
-    /* seggregate products according to seller */
-    // let dbProducts = await Product.findAll({
-    //     include: {
-    //         model: User,
-    //         as: "user"
-    //     },
-    //     where: {
-    //         id: {
-    //             [Op.in]: productIds
-    //         }
-    //     }
-    // })
-
-    // const plainProducts = dbProducts.map(product => product.toJSON());
-    // console.log(plainProducts);
-
-    // [
-    //     {
-    //         seller: "one",
-    //         products: []
-    //     },
-    //     {
-    //         seller: "two",
-    //         products: []
-    //     }
+    console.log(hash);
 
 
-    // ]
+    res.send({
+        msg: "order createD", data: {
+            order,
+            esewa: {
+                "amount": totalAmount,
+                "failure_url": "https://developer.esewa.com.np/failure",
+                "success_url": "https://developer.esewa.com.np/success",
+                "product_delivery_charge": "0",
+                "product_service_charge": "0",
+                "product_code": "EPAYTEST",
+                "signature": hash,
+                "signed_field_names": "total_amount,transaction_uuid,product_code",
+                "tax_amount": "0",
+                "total_amount": totalAmount,
+                "transaction_uuid": uuid
 
-    // await SubOrder.create({
-    //     orderId: order.getDataValue("id"),
-    //     sellerId: 27,
-    //     deliveryCharge: 0,
-    //     reference: "ORD-234"
-    // })
-
-
-
-    res.send({ msg: "order createD", data: order })
-
+            }
+        },
+    })
 
 
 }
