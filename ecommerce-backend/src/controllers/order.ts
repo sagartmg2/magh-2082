@@ -7,6 +7,7 @@ import { Op } from "sequelize";
 import User from "../models/User.js";
 import SubOrder from "../models/SubOrder.js";
 import OrderItem from "../models/OrderItem.js";
+import axios from "axios";
 
 
 
@@ -43,12 +44,18 @@ export const createOrder = async (req: Request, res: Response) => {
 
     const { phone, address, secondaryAddress, paymentMode, products } = req.body
 
+    let orderReference = `${Date.now() + 423423}`;
+    orderReference = `${'DRZ'}-${orderReference}`
+
+
+
     let order = await Order.create({
         userId: req.user?.id,
         phone: phone,
         address,
         secondaryAddress,
-        paymentMode
+        paymentMode,
+        reference: orderReference
     })
 
     let productIds = req.body.products.map((el: { productId: number }) => el.productId)
@@ -110,9 +117,7 @@ export const createOrder = async (req: Request, res: Response) => {
         }
     }
 
-    let uuid = Date.now() + 423423;
-
-    let message = `total_amount=${totalAmount},transaction_uuid=${uuid},product_code=EPAYTEST`;
+    let message = `total_amount=${totalAmount},transaction_uuid=${orderReference},product_code=EPAYTEST`;
 
     const hash = crypto.createHmac('sha256', '8gBm/:&EnhH.1/q')
         .update(message)
@@ -126,8 +131,8 @@ export const createOrder = async (req: Request, res: Response) => {
             order,
             esewa: {
                 "amount": totalAmount,
-                "failure_url": "https://developer.esewa.com.np/failure",
-                "success_url": "https://developer.esewa.com.np/success",
+                "failure_url": "http://localhost:5173/order-failed",
+                "success_url": "http://localhost:5173/order-success",
                 "product_delivery_charge": "0",
                 "product_service_charge": "0",
                 "product_code": "EPAYTEST",
@@ -135,7 +140,7 @@ export const createOrder = async (req: Request, res: Response) => {
                 "signed_field_names": "total_amount,transaction_uuid,product_code",
                 "tax_amount": "0",
                 "total_amount": totalAmount,
-                "transaction_uuid": uuid
+                "transaction_uuid": orderReference
 
             }
         },
@@ -144,3 +149,33 @@ export const createOrder = async (req: Request, res: Response) => {
 
 }
 
+
+export const verifyOrder = async (req: Request, res: Response) => {
+    let token = req.body.esewaToken
+    let decoded = Buffer.from(token, "base64").toString("utf8");
+    decoded = JSON.parse(decoded)
+    console.log({ decoded });
+    /* 
+    {"transaction_code":"000FLS6","status":"COMPLETE","total_amount":"285.0","transaction_uuid":"1780281971203","product_code":"EPAYTEST","signed_field_names":"transaction_code,status,total_amount,transaction_uuid,product_code,signed_field_names","signature":"BzQHQmCRvzoDimHvRuQYdvOqBMDgIEnHqSZTn/c5rhM="}
+     */
+    let esewaRes = await axios.get(`https://rc.esewa.com.np/api/epay/transaction/status/?product_code=EPAYTEST&total_amount=${decoded.total_amount}&transaction_uuid=${decoded.transaction_uuid}`)
+
+    if (esewaRes.data.status == "COMPLETE") {
+        console.log(esewaRes.data);
+        let order = await Order.findOne({
+            where: {
+                reference: esewaRes.data.transaction_uuid
+            }
+        })
+        await order?.update({
+            paymentStatus: "paid"
+        })
+        res.send({
+            msg: "succes"
+        })
+    } else {
+        res.status(402).send({
+            msg: "confit"
+        })
+    }
+}

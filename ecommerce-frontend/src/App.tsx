@@ -19,6 +19,7 @@ import AdminRootLayout from "./components/layout/admin/AdminRootLayout";
 import Categories from "./pages/admin/Categories";
 import Dashboard from "./pages/admin/Dashboard";
 import Cart from "./pages/Cart";
+import OrderSuccess from "./pages/OrderSuccess";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -89,7 +90,8 @@ function App() {
           Component: ProtectedRoute,
           children: [
             { path: "/orders", Component: Orders },
-            { path: "/carts", Component: Cart }
+            { path: "/carts", Component: Cart },
+            { path: "/order-success", Component: OrderSuccess },
           ],
         },
         {

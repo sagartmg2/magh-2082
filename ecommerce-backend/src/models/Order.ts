@@ -34,6 +34,16 @@ const Order = sequelize.define(
             type: DataTypes.ENUM,
             values: ["cash", "esewa"],
             defaultValue: "cash"
+        },
+        paymentStatus: {
+            type: DataTypes.ENUM,
+            values: ["unpaid", "paid", "confit", "refund"],
+            defaultValue: "unpaid"
+        },
+        reference: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true
         }
     },
     {
