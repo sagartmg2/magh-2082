@@ -4,7 +4,7 @@ import multer from "multer"
 
 const router = express.Router()
 import checkAuthentication from "../middlewares/checkAuthentication.js"
-import { createProduct, getProducts } from "../controllers/product.js"
+import { createProduct, getProducts, getProductDetail } from "../controllers/product.js"
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -21,6 +21,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 router.get('/api/products', getProducts)
+
+router.get('/api/products/:id', getProductDetail)
 
 
 

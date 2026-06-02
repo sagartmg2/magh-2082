@@ -25,7 +25,8 @@ function ProductCard({ product }) {
     (globalStore: RootState) => globalStore.user.value,
   );
 
-  const addToCart = (product) => {
+  const addToCart = (product, e) => {
+    e.stopPropagation();
     if (reduxUser) {
       axios.post(
         "http://localhost:4000/api/carts",
@@ -37,61 +38,63 @@ function ProductCard({ product }) {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         },
-      );
+      ).then(() => {
+        toast.success("Added to cart!");
+      });
     } else {
       toast.error("login required.");
     }
   };
 
   return (
-    <div className="flex bg-white border border-gray-100 rounded-sm overflow-hidden hover:shadow-lg transition-shadow duration-300">
-      <div
-        className="flex-shrink-0 overflow-hidden bg-gray-50"
-        style={{ width: 192, height: 168 }}
-      >
-        <img
-          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-          src={`http://localhost:4000/${product.images[0]?.path}`}
-          alt={product.title}
-        />
-      </div>
-      <div className="flex flex-col justify-center px-6 py-5 flex-1">
-        <h3
-          className="font-semibold tracking-wide text-gray-900 mb-1"
-          style={{ ...serifFont, fontSize: "1.18rem" }}
+    <Link to={`/products/${product.id}`} className="block">
+      <div className="flex bg-white border border-gray-100 rounded-sm overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer">
+        <div
+          className="flex-shrink-0 overflow-hidden bg-gray-50"
+          style={{ width: 192, height: 168 }}
         >
-          {product.title}
-        </h3>
-        <div className="flex items-center gap-2 mb-2">
-          <span className="text-xs text-gray-400 line-through">
-            {product.oldPrice}
-          </span>
-          <span className="text-sm font-medium text-red-600">
-            {product.newPrice}
-          </span>
-          <span
-            className="text-xs tracking-widest"
-            style={{ color: accentGold }}
-          >
-            {product.stars}
-          </span>
+          <img
+            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+            src={`http://localhost:4000/${product.images[0]?.path}`}
+            alt={product.title}
+          />
         </div>
-        <p className="text-xs text-gray-400 leading-relaxed mb-3 max-w-md">
-          {product.desc}
-        </p>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={() => {
-              addToCart(product);
-            }}
-            className=" flex items-center justify-center border border-gray-200 rounded-full text-xs cursor-pointer bg-secondary text-white px-3  py-2  hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-colors duration-200"
+        <div className="flex flex-col justify-center px-6 py-5 flex-1">
+          <h3
+            className="font-semibold tracking-wide text-gray-900 mb-1"
+            style={{ ...serifFont, fontSize: "1.18rem" }}
           >
-            add to cart <ShoppingCart />
-          </button>
+            {product.title}
+          </h3>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-xs text-gray-400 line-through">
+              {product.oldPrice}
+            </span>
+            <span className="text-sm font-medium text-red-600">
+              {product.newPrice}
+            </span>
+            <span
+              className="text-xs tracking-widest"
+              style={{ color: accentGold }}
+            >
+              {product.stars}
+            </span>
+          </div>
+          <p className="text-xs text-gray-400 leading-relaxed mb-3 max-w-md">
+            {product.desc}
+          </p>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={(e) => addToCart(product, e)}
+              className=" flex items-center justify-center border border-gray-200 rounded-full text-xs cursor-pointer bg-secondary text-white px-3  py-2  hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-colors duration-200"
+            >
+              add to cart <ShoppingCart />
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 

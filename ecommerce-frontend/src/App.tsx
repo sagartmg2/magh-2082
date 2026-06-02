@@ -6,6 +6,7 @@ import SignUp from "./pages/Signup";
 import { ToastContainer } from "react-toastify";
 import { useContext, useEffect, useState } from "react";
 import Products from "./pages/products/Products";
+import ProductDetail from "./pages/products/ProductDetail";
 import Orders from "./pages/Orders";
 import ProtectedRoute from "./components/ProtectedRoute";
 import axios from "axios";
@@ -84,10 +85,11 @@ function App() {
       Component: RootLayout,
       children: [
         { path: "/", Component: Home },
-        { path: "/products", Component: Products },
-        {
-          path: "",
-          Component: ProtectedRoute,
+            { path: "/products", Component: Products },
+            { path: "/products/:id", Component: ProductDetail },
+            {
+              path: "",
+              Component: ProtectedRoute,
           children: [
             { path: "/orders", Component: Orders },
             { path: "/carts", Component: Cart },

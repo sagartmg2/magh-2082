@@ -47,8 +47,6 @@ export const createOrder = async (req: Request, res: Response) => {
     let orderReference = `${Date.now() + 423423}`;
     orderReference = `${'DRZ'}-${orderReference}`
 
-
-
     let order = await Order.create({
         userId: req.user?.id,
         phone: phone,
@@ -123,9 +121,6 @@ export const createOrder = async (req: Request, res: Response) => {
         .update(message)
         .digest('base64');
 
-    console.log(hash);
-
-
     res.send({
         msg: "order createD", data: {
             order,
@@ -154,14 +149,12 @@ export const verifyOrder = async (req: Request, res: Response) => {
     let token = req.body.esewaToken
     let decoded = Buffer.from(token, "base64").toString("utf8");
     decoded = JSON.parse(decoded)
-    console.log({ decoded });
     /* 
     {"transaction_code":"000FLS6","status":"COMPLETE","total_amount":"285.0","transaction_uuid":"1780281971203","product_code":"EPAYTEST","signed_field_names":"transaction_code,status,total_amount,transaction_uuid,product_code,signed_field_names","signature":"BzQHQmCRvzoDimHvRuQYdvOqBMDgIEnHqSZTn/c5rhM="}
      */
     let esewaRes = await axios.get(`https://rc.esewa.com.np/api/epay/transaction/status/?product_code=EPAYTEST&total_amount=${decoded.total_amount}&transaction_uuid=${decoded.transaction_uuid}`)
 
     if (esewaRes.data.status == "COMPLETE") {
-        console.log(esewaRes.data);
         let order = await Order.findOne({
             where: {
                 reference: esewaRes.data.transaction_uuid

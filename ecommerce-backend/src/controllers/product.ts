@@ -112,6 +112,33 @@ export const getProducts = async (req: Request, res: Response) => {
         }
     })
 }
+export const getProductDetail = async (req: Request, res: Response) => {
+
+
+
+    // console.log("hereee333");
+    // return;
+
+    let product = await Product.findByPk(parseInt(req.params.id as string), {
+        include: [
+            {
+                model: Category,
+                as: "category",
+                attributes: ["id", "title", "parentId"],
+            },
+            {
+                model: ProductImage,
+                as: "images",
+                attributes: ["id", "path",]
+
+            }
+        ],
+    })
+
+    res.send({
+        data: product
+    })
+}
 
 // named exports
 export const createProduct = async (req: Request, res: Response) => {
