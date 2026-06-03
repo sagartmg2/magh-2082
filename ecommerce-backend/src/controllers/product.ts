@@ -1,6 +1,6 @@
 
 
-import { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import Product from "../models/Product.js";
 import ProductImage from "../models/ProductImage.js";
 import Category from "../models/Category.js";
@@ -141,7 +141,7 @@ export const getProductDetail = async (req: Request, res: Response) => {
 }
 
 // named exports
-export const createProduct = async (req: Request, res: Response) => {
+export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
     console.log("req.user", req.user);
     console.log("req.files/images", req.files);
 
@@ -176,6 +176,7 @@ export const createProduct = async (req: Request, res: Response) => {
 
         res.send(product)
     } catch (err) {
-        res.status(500).send({ msg: "server error", error: err.message })
+        // res.status(500).send({ msg: "server error", error: err.message })
+        next(err)
     }
 }

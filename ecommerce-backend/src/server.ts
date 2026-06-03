@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import express from "express"
 import authRoute from "./routes/auth.js"
 import productRoute from "./routes/product.js"
@@ -9,6 +10,7 @@ import path from "path"
 import "./models/index.js"
 import "./connections/database.js"
 import checkAuthentication from "./middlewares/checkAuthentication.js"
+import { errorHandler } from './middlewares/errorHandler.js'
 // import { User as UserType } from "./types/User.js"
 
 
@@ -16,6 +18,7 @@ import checkAuthentication from "./middlewares/checkAuthentication.js"
 // const crypto = require('crypto');
 
 // console.log(path.join("/upload", "/products"));
+
 
 const app = express()
 const port = 4000
@@ -33,7 +36,6 @@ app.use((req, res, next) => {
     console.log("inside app.use() first middlweare");
     next()
 })
-
 
 app.use((req, res, next) => {
     console.log("inside app.use() second middlreware  ");
@@ -53,6 +55,16 @@ app.use("/api/orders", checkAuthentication, orderRoute);
 app.get('/', (req, res) => {
     res.send('Hello World updated!')
 })
+
+
+app.use((req, res) => {
+    res.status(404).send({
+        msg: "resource not found"
+    })
+})
+
+
+app.use(errorHandler)
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)

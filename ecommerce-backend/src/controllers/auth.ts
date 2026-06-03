@@ -1,10 +1,10 @@
 import bcrypt from "bcrypt";
-import { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import jwt from 'jsonwebtoken'
 
 import User from "../models/User.js";
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response, next: NextFunction) => {
 
     try {
         // zod  validation: 
@@ -21,6 +21,7 @@ export const login = async (req: Request, res: Response) => {
             let matched = await bcrypt.compare(req.body.password, hashedPw);
 
             if (matched) {
+
                 const token = jwt.sign(userInfo, 'shhhhh');
                 return res.send({
                     msg: "login success",
@@ -33,15 +34,16 @@ export const login = async (req: Request, res: Response) => {
             msg: "Invalid creadentials"
         })
     } catch (err) {
-        console.log(err)
-        res.status(500).send({
-            msg: "Server Error. please try again later.."
-        })
+        next(err)
+        // console.log(err)
+        // res.status(500).send({
+        //     msg: "Server Error. please try again later.."
+        // })
     }
 }
 
 
-export const signup = async (req: Request, res: Response) => {
+export const signup = async (req: Request, res: Response, next: NextFunction) => {
 
     /* 
         {
@@ -53,7 +55,6 @@ export const signup = async (req: Request, res: Response) => {
                 msg:"required require"
             }]   
         }
-    
     */
 
     try {
@@ -61,21 +62,25 @@ export const signup = async (req: Request, res: Response) => {
         let hashedPw = await bcrypt.hash(req.body.password, 10);
 
         await User.create({
-            firstName: req.body.firstName,
+            firstName: req.body.firstName || null,
             lastName: req.body.lastName,
             email: req.body.email,
             password: hashedPw,
             isSeller: req.body.isSeller
         })
         res.send('signup!')
-
-    } catch (err) {
-        console.log(err);
-        res.status(500).send({
-            msg: "Server Errror",
-            error: err
-        })
     }
+    catch (err) {
+        next(err)
+    }
+
+    // } catch (err) {
+    //     console.log(err);
+    //     res.status(500).send({
+    //         msg: "Server Errror",
+    //         error: err
+    //     })
+    // }
 
 }
 
