@@ -5,23 +5,26 @@ import { toast } from "react-toastify";
 import { login } from "../redux/features/userSlice";
 import { useDispatch } from "react-redux";
 
+const DEV_USERS = [
+  { label: "Buyer", email: "buyer@gmail.com", password: "password" },
+  { label: "Seller", email: "seller@gmail.com", password: "password" },
+  { label: "Admin", email: "admin@gmail.com", password: "password" },
+];
+
 export default function Login({ setUser }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(e.target);
+    submitLogin(e.target.email.value, e.target.password.value);
+  };
 
+  const submitLogin = (email, password) => {
     axios
-      .post("http://localhost:4000/api/login", {
-        email: e.target.email.value,
-        password: e.target.password.value,
-      })
+      .post("http://localhost:4000/api/login", { email, password })
       .then((res) => {
         toast("login success!");
-        console.log(res.data);
-        // setUser(res.data.user);
         localStorage.setItem("token", res.data.token);
         dispatch(login(res.data.user));
         if (res.data.user.isAdmin) {
@@ -31,16 +34,16 @@ export default function Login({ setUser }) {
         }
       })
       .catch((err) => {
-        console.log(err);
-
-        if (err.response.status == 401) {
-          toast.error("Invalid Credentails");
-        } else if (err.response.status == 400) {
-          toast.error(err.response.data.msg);
+        if (err.response.status === 401) {
+          toast.error("Invalid Credentials");
         } else {
           toast.error(err.response.data.msg);
         }
       });
+  };
+
+  const handleDevLogin = (user) => {
+    submitLogin(user.email, user.password);
   };
 
   return (
@@ -95,11 +98,35 @@ export default function Login({ setUser }) {
 
         {/* Footer */}
         <p className="font-['Lato',sans-serif] not-italic text-[17px] text-[#9096b2] leading-normal">
-          Don't have an Account?
+          Don't have an Account?{" "}
           <Link to="/signup" className="cursor-pointer hover:underline">
             Create account
           </Link>
         </p>
+
+        {/* Dev Quick Login — remove before production */}
+        {process.env.NODE_ENV === "development" && (
+          <div className="w-[432px] mt-7 border border-dashed border-[#c2c5e1] rounded-[4px] p-4">
+            <p className="font-['Lato',sans-serif] text-[12px] font-bold text-[#9096b2] uppercase tracking-widest mb-3">
+              🛠 Dev Quick Login
+            </p>
+            <div className="flex gap-2">
+              {DEV_USERS.map((user) => (
+                <button
+                  key={user.label}
+                  type="button"
+                  onClick={() => handleDevLogin(user)}
+                  className="flex-1 py-2 text-[13px] font-['Lato',sans-serif] font-bold text-[#9096b2] border border-[#c2c5e1] rounded-[2px] hover:bg-[#f8f8fb] hover:border-[#f03e7a] hover:text-[#f03e7a] transition-all"
+                >
+                  {user.label}
+                </button>
+              ))}
+            </div>
+            <p className="font-['Lato',sans-serif] text-[11px] text-[#c2c5e1] mt-2 text-center">
+              All accounts use password: <span className="font-bold">password</span>
+            </p>
+          </div>
+        )}
       </form>
     </div>
   );

@@ -9,6 +9,7 @@ import { Op, Order } from "sequelize";
 
 export const getProducts = async (req: Request, res: Response) => {
 
+    console.log("products api fetched.....")
     let limit = 15
     let page = 1
     let sort = ["createdAt", "DESC"]
