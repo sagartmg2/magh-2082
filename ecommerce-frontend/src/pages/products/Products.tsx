@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../../redux/store";
 import { Link, useSearchParams } from "react-router";
 import axios from "axios";
 import { ShoppingCart } from "lucide-react";
 import { toast } from "react-toastify";
+import { fetchCarts } from "../../redux/features/cartSlice";
 
 const accentGold = "#C8A96E";
 const serifFont = { fontFamily: "'Cormorant Garamond', serif" };
@@ -25,22 +26,27 @@ function ProductCard({ product }) {
     (globalStore: RootState) => globalStore.user.value,
   );
 
+  const dispatch = useDispatch();
+
   const addToCart = (product, e) => {
     e.stopPropagation();
     if (reduxUser) {
-      axios.post(
-        "http://localhost:4000/api/carts",
-        {
-          productId: product.id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+      axios
+        .post(
+          "http://localhost:4000/api/carts",
+          {
+            productId: product.id,
           },
-        },
-      ).then(() => {
-        toast.success("Added to cart!");
-      });
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          },
+        )
+        .then(() => {
+          dispatch(fetchCarts());
+          toast.success("Added to cart!");
+        });
     } else {
       toast.error("login required.");
     }
@@ -86,7 +92,10 @@ function ProductCard({ product }) {
           <div className="flex gap-2">
             <button
               type="button"
-              onClick={(e) => addToCart(product, e)}
+              onClick={(e) => {
+                e.preventDefault();
+                addToCart(product, e);
+              }}
               className=" flex items-center justify-center border border-gray-200 rounded-full text-xs cursor-pointer bg-secondary text-white px-3  py-2  hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-colors duration-200"
             >
               add to cart <ShoppingCart />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Cross,
   Mail,
@@ -19,10 +19,16 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../../redux/store";
 import { logout } from "../../redux/features/userSlice";
+import axios from "axios";
+import { setCarts } from "../../redux/features/cartSlice";
 
 export default function Header() {
   const reduxUser = useSelector(
     (globalStore: RootState) => globalStore.user.value,
+  );
+
+  const reduxCarts = useSelector(
+    (globalStore: RootState) => globalStore.cart.value,
   );
 
   const [menuOpened, setMenuOpened] = useState(false);
@@ -51,7 +57,19 @@ export default function Header() {
     }
   }
 
-  console.log("HEADER-RENDER");
+  const BASE_URL = "http://localhost:4000";
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/api/carts`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((res) => {
+        dispatch(setCarts(res.data.data ?? []));
+      })
+      .catch(() => setCarts([]));
+  }, []);
 
   return (
     <>
@@ -88,7 +106,12 @@ export default function Header() {
               )}
               <User />
             </div>
-            <ShoppingCart />
+            <div className="relative">
+              <span className=" -top-2 -right-2 bg-red-500 absolute text-white h-5 w-5 rounded-full flex justify-center items-center">
+                {reduxCarts.length}
+              </span>
+              <ShoppingCart />
+            </div>
           </div>
         </div>
       </div>
