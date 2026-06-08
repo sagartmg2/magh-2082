@@ -61,7 +61,8 @@ function ProductCard({ product }) {
         >
           <img
             className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-            src={`http://localhost:4000/${product.images[0]?.path}`}
+            // src={`http://localhost:4000/${product.images[0]?.path}`}
+            src={`${product.images[0]?.path}`}
             alt={product.title}
           />
         </div>
@@ -116,7 +117,7 @@ export default function Products() {
 
   const [filter, setFilters] = useState({
     limit: searchParams.get("limit") || 15,
-    sort: "oldest",
+    sort: "newest",
     categoryIds: [],
   });
 

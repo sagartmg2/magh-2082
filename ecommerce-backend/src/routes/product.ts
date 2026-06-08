@@ -6,19 +6,39 @@ const router = express.Router()
 import checkAuthentication from "../middlewares/checkAuthentication.js"
 import { createProduct, getProducts, getProductDetail } from "../controllers/product.js"
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads')
-    },
-    filename: function (req, file, cb) {
-        console.log(file);
-        const extension = path.extname(file.originalname)
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9) + extension
-        cb(null, file.fieldname + '-' + uniqueSuffix)
-    }
-})
+import { v2 as cloudinary } from 'cloudinary'
 
-const upload = multer({ storage: storage })
+
+cloudinary.config({
+    cloud_name: 'dtv8dtpkm',
+    api_key: '214576936119774',
+    api_secret: 'Bybox_PKl5TAvKLSrDbGHLXEI3E'
+});
+
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, 'uploads')
+//     },
+//     filename: function (req, file, cb) {
+
+//         cloudinary.uploader
+//             .upload(file)
+//             .then(result => console.log(result))
+//             .catch(err => {
+//                 console.log("cloudinary",err);
+//             })
+
+//         console.log(file);
+//         const extension = path.extname(file.originalname)
+//         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9) + extension
+//         cb(null, file.fieldname + '-' + uniqueSuffix)
+//     }
+// })
+
+// const upload = multer({ storage: storage })
+
+const upload = multer({ storage: multer.memoryStorage() });
+
 
 router.get('/api/products', getProducts)
 
