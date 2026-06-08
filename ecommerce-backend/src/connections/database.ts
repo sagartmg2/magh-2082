@@ -1,6 +1,6 @@
 // const { Sequelize } = require('sequelize');
-import { Sequelize } from "sequelize"
-
+import { Sequelize } from "sequelize";
+import pg from "pg"
 
 console.log(process.env.DB_USERNAME);
 
@@ -8,7 +8,8 @@ console.log(process.env.DB_USERNAME);
 // const sequelize = new Sequelize(`postgres://postgres:postgres@localhost:5439/postgres`, {
 
 const sequelize = new Sequelize(`postgres://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}?sslmode=${process.env.DB_SSL}`, {
-    logging: true
+    logging: true,
+    dialectModule:pg
 })
 
 // const sequelize = new Sequelize(
