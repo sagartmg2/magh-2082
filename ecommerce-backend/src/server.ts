@@ -53,7 +53,7 @@ app.use("/api/orders", checkAuthentication, orderRoute);
 
 
 app.get('/', (req, res) => {
-    res.send('Hello World updated!')
+    res.send('Hello World!')
 })
 
 
