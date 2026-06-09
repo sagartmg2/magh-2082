@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const BASE_URL = "http://localhost:4000";
+const BASE_URL = import.meta.env.VITE_API_URL
 
 interface ProductImage {
   id: number;
@@ -49,7 +49,7 @@ function Cart() {
 
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/api/carts`, {
+      .get(`${BASE_URL}/carts`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -109,7 +109,7 @@ function Cart() {
 
     axios
       .post(
-        "http://localhost:4000/api/orders",
+        `${import.meta.env.VITE_API_URL}/orders`,
         {
           phone: phone,
           paymentMode: payment,

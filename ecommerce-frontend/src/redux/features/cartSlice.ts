@@ -10,8 +10,8 @@ const initialState: CartState = {
 }
 
 export const fetchCarts = createAsyncThunk('cart/fetchCarts', async () => {
-    const BASE_URL = "http://localhost:4000";
-    const res = await axios.get(`${BASE_URL}/api/carts`, {
+    const BASE_URL = import.meta.env.VITE_API_URL
+    const res = await axios.get(`${BASE_URL}/carts`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

@@ -31,7 +31,7 @@ export default function CreateProduct() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/api/categories")
+      .get(`${import.meta.env.VITE_API_URL}/categories`)
       .then((res) => setCategories(res.data.data));
   }, []);
 
@@ -56,7 +56,7 @@ export default function CreateProduct() {
         }
       }
 
-      await axios.post("http://localhost:4000/api/products", formData, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/products`, formData, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 

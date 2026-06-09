@@ -57,10 +57,10 @@ export default function Header() {
     }
   }
 
-  const BASE_URL = "http://localhost:4000";
+  const BASE_URL = import.meta.env.VITE_API_URL
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/api/carts`, {
+      .get(`${BASE_URL}/carts`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

@@ -8,7 +8,7 @@ export default function SignUp() {
     console.log(e.target);
 
     axios
-      .post("http://localhost:4000/api/signup", {
+      .post(`${import.meta.env.VITE_API_URL}/signup`, {
         firstName: e.target.first_name.value,
         lastName: e.target.last_name.value,
         email: e.target.email.value,

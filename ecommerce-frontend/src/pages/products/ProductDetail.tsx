@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../redux/store";
 
-const BASE_URL = "http://localhost:4000";
+const BASE_URL = import.meta.env.VITE_API_URL
 const accentGold = "#C8A96E";
 const serifFont = { fontFamily: "'Cormorant Garamond', serif" };
 
@@ -45,7 +45,7 @@ export default function ProductDetail() {
   useEffect(() => {
     if (id) {
       axios
-        .get(`${BASE_URL}/api/products/${id}`)
+        .get(`${BASE_URL}/products/${id}`)
         .then((res) => {
           setProduct(res.data.data);
           if (res.data.data.images.length > 0) {

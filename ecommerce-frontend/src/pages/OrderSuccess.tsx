@@ -13,7 +13,7 @@ import {
   Mail 
 } from "lucide-react";
 
-const BASE_URL = "http://localhost:4000";
+const BASE_URL = import.meta.env.VITE_API_URL
 
 function OrderSuccess() {
   const [searchParams] = useSearchParams();
@@ -31,7 +31,7 @@ function OrderSuccess() {
 
     axios
       .post(
-        `${BASE_URL}/api/orders/order-verify`,
+        `${BASE_URL}/orders/order-verify`,
         { esewaToken },
         {
           headers: {

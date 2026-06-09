@@ -33,7 +33,7 @@ function ProductCard({ product }) {
     if (reduxUser) {
       axios
         .post(
-          "http://localhost:4000/api/carts",
+          `${import.meta.env.VITE_API_URL}/carts`,
           {
             productId: product.id,
           },
@@ -61,7 +61,6 @@ function ProductCard({ product }) {
         >
           <img
             className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-            // src={`http://localhost:4000/${product.images[0]?.path}`}
             src={`${product.images[0]?.path}`}
             alt={product.title}
           />
@@ -127,7 +126,7 @@ export default function Products() {
 
     axios
       .get(
-        `http://localhost:4000/api/products?q=${searchText}&categoryIds=${filter.categoryIds.join()}&limit=${limit}&sort=${filter.sort}`,
+        `${import.meta.env.VITE_API_URL}/products?q=${searchText}&categoryIds=${filter.categoryIds.join()}&limit=${limit}&sort=${filter.sort}`,
       )
       .then((res) => {
         setProducts(res.data.data.products);
@@ -135,7 +134,7 @@ export default function Products() {
   }, [filter, searchParams]);
 
   useEffect(() => {
-    axios.get("http://localhost:4000/api/categories").then((res) => {
+    axios.get(`${import.meta.env.VITE_API_URL}/categories`).then((res) => {
       setCategories(res.data.data);
     });
   }, []);

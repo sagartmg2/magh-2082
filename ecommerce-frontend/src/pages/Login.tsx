@@ -22,7 +22,7 @@ export default function Login({ setUser }) {
 
   const submitLogin = (email, password) => {
     axios
-      .post("http://localhost:4000/api/login", { email, password })
+      .post(`${import.meta.env.VITE_API_URL}/login`, { email, password })
       .then((res) => {
         toast("login success!");
         localStorage.setItem("token", res.data.token);
