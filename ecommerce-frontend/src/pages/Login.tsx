@@ -105,7 +105,7 @@ export default function Login({ setUser }) {
         </p>
 
         {/* Dev Quick Login — remove before production */}
-        {process.env.NODE_ENV === "development" && (
+        {import.meta.env.VITE_APP_ENV === "local" && (
           <div className="w-[432px] mt-7 border border-dashed border-[#c2c5e1] rounded-[4px] p-4">
             <p className="font-['Lato',sans-serif] text-[12px] font-bold text-[#9096b2] uppercase tracking-widest mb-3">
               🛠 Dev Quick Login
@@ -123,7 +123,8 @@ export default function Login({ setUser }) {
               ))}
             </div>
             <p className="font-['Lato',sans-serif] text-[11px] text-[#c2c5e1] mt-2 text-center">
-              All accounts use password: <span className="font-bold">password</span>
+              All accounts use password:{" "}
+              <span className="font-bold">password</span>
             </p>
           </div>
         )}

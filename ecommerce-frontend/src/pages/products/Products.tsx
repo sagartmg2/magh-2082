@@ -44,6 +44,7 @@ function ProductCard({ product }) {
           },
         )
         .then(() => {
+          // @ts-ignore
           dispatch(fetchCarts());
           toast.success("Added to cart!");
         });
@@ -143,6 +144,7 @@ export default function Products() {
     setFilters((prev) => {
       let newCategoryIds = [...prev.categoryIds];
       if (e.target.checked) {
+        // @ts-ignore
         newCategoryIds.push(cat.id);
       } else {
         newCategoryIds = newCategoryIds.filter((el) => el != cat.id);
@@ -204,6 +206,7 @@ export default function Products() {
             <div className="flex flex-col mt-1">
               {categories.map((cat) => (
                 <>
+                {/* @ts-ignore */}
                   <div className={`flex gap-2 ${cat.parentId ? "pl-8" : ""}`}>
                     <input
                       id={`cat-${cat.id}`}

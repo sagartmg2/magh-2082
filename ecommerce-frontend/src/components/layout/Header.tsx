@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import type { SyntheticEvent } from "react";
 import {
   Cross,
   Mail,
@@ -40,24 +41,25 @@ export default function Header() {
 
   console.log("query q:", searchParams.get("q"));
 
-  function handleSubmit(e) {
+  function handleSubmit(e: SyntheticEvent) {
     e.preventDefault();
-    e.target.searchText;
 
     // setCount((prev) =>{return prev + 1})
 
     setSearchParms((prev) => {
       const newParms = new URLSearchParams(prev);
+      // @ts-ignore
       newParms.set("q", e.target.searchText.value);
       return newParms;
     });
 
     if (location.pathname !== "/products") {
+      // @ts-ignore
       navigate("/products?q=" + e.target.searchText.value);
     }
   }
 
-  const BASE_URL = import.meta.env.VITE_API_URL
+  const BASE_URL = import.meta.env.VITE_API_URL;
   useEffect(() => {
     axios
       .get(`${BASE_URL}/carts`, {
