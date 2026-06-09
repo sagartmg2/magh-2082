@@ -6,11 +6,14 @@ console.log(process.env.DB_USERNAME);
 
 
 // const sequelize = new Sequelize(`postgres://postgres:postgres@localhost:5439/postgres`, {
+// sslmode=${process.env.DB_SSL}
 
-const sequelize = new Sequelize(`postgres://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}?sslmode=${process.env.DB_SSL}`, {
-    logging: true,
-    dialectModule:pg
+const sequelize = new Sequelize(`postgres://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}${process.env.APP_ENV == "production" ? `?sslmode=${process.env.DB_SSL}` : ""}`, {
+    logging: false,
+    dialectModule: pg
 })
+
+
 
 // const sequelize = new Sequelize(
 //     process.env.DB_NAME as string,
