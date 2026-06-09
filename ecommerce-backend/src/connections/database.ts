@@ -2,8 +2,6 @@
 import { Sequelize } from "sequelize";
 import pg from "pg"
 
-console.log(process.env.DB_USERNAME);
-
 
 // const sequelize = new Sequelize(`postgres://postgres:postgres@localhost:5439/postgres`, {
 // sslmode=${process.env.DB_SSL}
